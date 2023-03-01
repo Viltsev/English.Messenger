@@ -4,7 +4,6 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Mysteria-Nouveau.ttf</string>
 		<string>Simpleoak-RpP3o.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>

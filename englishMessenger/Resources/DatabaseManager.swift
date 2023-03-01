@@ -58,9 +58,62 @@ extension DatabaseManager {
                 completion(false)
                 return
             }
+            
+            /// получение данных о пользователе
+            self.database.child("users").observeSingleEvent(of: .value, with: {snapshot in
+                if var usersCollection = snapshot.value as? [[String: String]] {
+                    // добавление пользователя в словарь
+                    let newElement = [
+                        "name": user.firstName + " " + user.lastName,
+                        "email": user.safeEmail
+                    ]
+                    usersCollection.append(newElement)
+                    
+                    self.database.child("users").setValue(usersCollection, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            completion(false)
+                            return
+                        }
+                    })
+                    
+                }
+                else {
+                    // создание нового словаря
+                    let newCollection: [[String: String]] = [
+                        [
+                            "name": user.firstName + " " + user.lastName,
+                            "email": user.safeEmail
+                        ]
+                    ]
+                    
+                    self.database.child("users").setValue(newCollection, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            return
+                        }
+                    })
+                }
+            })
+            
             completion(true)
         })
     }
+    
+    /// функция получения всех существующих пользователей
+    public func getAllUsers(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
+        database.child("users").observeSingleEvent(of: .value, with: { snapshot in
+            guard let value = snapshot.value as? [[String: String]] else {
+                completion(.failure(DatabaseError.failedToFetch))
+                return
+            }
+            completion(.success(value))
+        })
+    }
+    
+    /// перечисление - ошибки базы данных
+    public enum DatabaseError: Error {
+        case failedToFetch
+    }
+    
 }
 
 
