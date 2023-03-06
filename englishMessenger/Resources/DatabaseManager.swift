@@ -120,7 +120,7 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     /// создание нового диалога
-    public func createNewConversation(with otherUserEmail: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
+    public func createNewConversation(with otherUserEmail: String, name: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
         // получение почты текущего пользователя из UserDefaults
         guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             return
@@ -175,6 +175,7 @@ extension DatabaseManager {
                 "other_user_email": otherUserEmail,
                 "latest_message": [
                     "date": dateString,
+                    "name": name,
                     "message": message,
                     "is_read": false
                 ]
@@ -192,9 +193,10 @@ extension DatabaseManager {
                     }
                     
                     // вызов функции завершения создания диалога
-                    self?.finishCreatingConversation(conversationID: conversationID,
-                                                    firstMessage: firstMessage,
-                                                    completion: completion)
+                    self?.finishCreatingConversation(name: name,
+                                                     conversationID: conversationID,
+                                                     firstMessage: firstMessage,
+                                                     completion: completion)
                 })
             }
             else {
@@ -210,16 +212,17 @@ extension DatabaseManager {
                     }
                     
                     // вызов функции завершения создания диалога
-                    self?.finishCreatingConversation(conversationID: conversationID,
-                                                    firstMessage: firstMessage,
-                                                    completion: completion)
+                    self?.finishCreatingConversation(name: name,
+                                                     conversationID: conversationID,
+                                                     firstMessage: firstMessage,
+                                                     completion: completion)
                 })
             }
         })
     }
     
     /// функция завершения создания диалога
-    private func finishCreatingConversation(conversationID: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
+    private func finishCreatingConversation(name: String, conversationID: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
         
         // дата отправления сообщения
         let messageDate = firstMessage.sentDate
@@ -266,7 +269,8 @@ extension DatabaseManager {
             "content": message,
             "date": "",
             "sender_email": currentUserEmail,
-            "is_read": false
+            "is_read": false,
+            "name": name
         ]
         
         let value: [String: Any] = [

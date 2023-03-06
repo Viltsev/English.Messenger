@@ -12,6 +12,7 @@ pod 'Firebase/Storage'
 pod 'MessageKit'
 pod 'JGProgressHUD'
 pod 'SDWebImage'
+pod 'Alamofire'
 
   # Pods for englishMessenger
 
