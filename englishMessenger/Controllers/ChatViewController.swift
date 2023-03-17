@@ -135,18 +135,25 @@ class ChatViewController: MessagesViewController {
     }()
     
     public var otherUserEmail: String
+    private var conversationID: String?
+
     public var isNewConversation = false
     private var messages = [Message]()
+    
     private var selfSender: Sender? {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
         }
+        
+        let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+        
         return Sender(photoURL: "",
-                      senderId: email,
-                      displayName: "Danila Viltsev")
+                      senderId: safeEmail,
+                      displayName: "Me")
     }
     
-    init(with email: String) {
+    init(with email: String, id: String?) {
+        self.conversationID = id
         self.otherUserEmail = email
         super.init(nibName: nil, bundle: nil)
     }
@@ -164,10 +171,38 @@ class ChatViewController: MessagesViewController {
         messageInputBar.delegate = self
     }
     
+    private func listenForMessages(id: String, shouldScrollToBottom: Bool) {
+        DatabaseManager.shared.getAllMessagesForConversation(with: id, completion: { [weak self] result in
+            switch result {
+            case .success(let messages):
+                guard !messages.isEmpty else {
+                    print("empty")
+                    return
+                }
+                self?.messages = messages
+                
+                DispatchQueue.main.async {
+                    self?.messagesCollectionView.reloadDataAndKeepOffset()
+                    
+                    if shouldScrollToBottom {
+                        self?.messagesCollectionView.scrollToBottom()
+                    }
+                }
+                
+                
+            case .failure(let error):
+                print("failed to get messages: \(error)")
+            }
+            
+        })
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         messageInputBar.inputTextView.becomeFirstResponder()
-        
+        if let conversationID = conversationID {
+            listenForMessages(id: conversationID, shouldScrollToBottom: true)
+        }
     }
 }
 
@@ -206,56 +241,60 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         }
         // send message
         print("\(text)")
-        let message = Message(sender: selfSender,
-                              messageId: messageID,
-                              sentDate: Date(),
-                              kind: .text(text))
+        
         
         // test grammar check api
         
         
-        let parameters = ["text": "\(text)", "language": "en-US"]
-        let url = "https://api.languagetoolplus.com/v2/check"
-        AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.httpBody).responseJSON(completionHandler: { response in
-            // полученные данные из запроса
-            let result = response.data
-            // array типа Match
-            var grammarMistakes: [Match]
-            // array типа Replacement
-            var grammarReplacements: [Replacement]
-            
-            do {
-                // с помощью JSONDecoder переводим данные из полученного JSON в структуру Welcome
-                let welcom = try JSONDecoder().decode(Welcome.self, from: result!)
-                
-                // сохраняем в массив grammarMistakes данные из matches
-                grammarMistakes = welcom.matches
-                
-                // получаем сообщение о грамматической ошибке
-                let grammarMistakeMessage = self.getMatchMessageMistake(array: grammarMistakes)
-                
-                // сохраняем в массив grammarReplacements данные из grammarMistakes
-                grammarReplacements = self.getMatchArrayOfReplacements(array: grammarMistakes)
-                
-                // получаем возможное исправление грамматической ошибки
-                let grammarReplaceMessage = self.getMatchReplace(array: grammarReplacements)
-                
-                // alert с выводом грамматической ошибки
-                self.alertGrammarMistake(message: grammarMistakeMessage)
-                
-                
-//                print("Грамматическая ошибка: \(grammarMistakeMessage)")
-//                print("Как нужно исправить: \(grammarReplaceMessage)")
-            } catch {
-                print("error in decode json!")
-            }
-        })
+//        let parameters = ["text": "\(text)", "language": "en-US"]
+//        let url = "https://api.languagetoolplus.com/v2/check"
+//        AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.httpBody).responseJSON(completionHandler: { response in
+//            // полученные данные из запроса
+//            let result = response.data
+//            // array типа Match
+//            var grammarMistakes: [Match]
+//            // array типа Replacement
+//            var grammarReplacements: [Replacement]
+//
+//            do {
+//                // с помощью JSONDecoder переводим данные из полученного JSON в структуру Welcome
+//                let welcom = try JSONDecoder().decode(Welcome.self, from: result!)
+//
+//                // сохраняем в массив grammarMistakes данные из matches
+//                grammarMistakes = welcom.matches
+//
+//                // получаем сообщение о грамматической ошибке
+//                let grammarMistakeMessage = self.getMatchMessageMistake(array: grammarMistakes)
+//
+//                // сохраняем в массив grammarReplacements данные из grammarMistakes
+//                grammarReplacements = self.getMatchArrayOfReplacements(array: grammarMistakes)
+//
+//                // получаем возможное исправление грамматической ошибки
+//                let grammarReplaceMessage = self.getMatchReplace(array: grammarReplacements)
+//
+//                // alert с выводом грамматической ошибки
+//                self.alertGrammarMistake(message: grammarMistakeMessage)
+//
+//
+////                print("Грамматическая ошибка: \(grammarMistakeMessage)")
+////                print("Как нужно исправить: \(grammarReplaceMessage)")
+//            } catch {
+//                print("error in decode json!")
+//            }
+//        })
+        
+        
+        let message = Message(sender: selfSender,
+                              messageId: messageID,
+                              sentDate: Date(),
+                              kind: .text(text))
         
         if isNewConversation {
             // create conversation
             DatabaseManager.shared.createNewConversation(with: otherUserEmail, name: self.title ?? "User", firstMessage: message, completion: { success in
                 if success {
                     print("message sent")
+                    self.isNewConversation = false
                 }
                 else {
                     print("message didn't send")
@@ -263,7 +302,17 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             })
         }
         else {
-            
+            guard let conversationID = conversationID, let name = self.title else {
+                return
+            }
+            DatabaseManager.shared.sendMessage(to: conversationID, otherUserEmail: otherUserEmail, name: name, newMessage: message, completion: { success in
+                if success {
+                    print("message sent")
+                }
+                else {
+                    print("failed to send")
+                }
+            })
         }
         
     }

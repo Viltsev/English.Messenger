@@ -6,13 +6,18 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ConversationTableViewCell: UITableViewCell {
 
+    static let identifier = "ConversationTableViewCell"
+    
     private let userImageView: UIImageView = {
         let imageView = UIImageView()
         // image description here
-        
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 50
+        imageView.layer.masksToBounds = true
         
         return imageView
     }()
@@ -56,7 +61,12 @@ class ConversationTableViewCell: UITableViewCell {
                                        height: (contentView.height - 20) / 2)
     }
     
-    public func configure(with model: String) {
+    public func configure(with model: Conversation) {
+        self.userMessageView.text = model.latestMessage.text
+        self.userNameView.text = model.name
+        
+        /// show user's pictures
+        // let path = "\(model.otherUserEmail)_profile_picture.png"
         
     }
     
