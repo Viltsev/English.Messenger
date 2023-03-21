@@ -16,7 +16,7 @@ class LoginViewController: UIViewController {
     
     /// title
     private let titleLabel: UILabel = {
-       let title = UILabel()
+        let title = UILabel()
         title.text = "Sign In"
         title.font = UIFont(name: "Simpleoak", size: 60)
         title.textColor = .systemPurple

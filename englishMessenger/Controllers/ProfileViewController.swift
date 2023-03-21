@@ -12,7 +12,7 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     let data = ["Выйти", "Определение уровня языка", "Мои интересы",
-                "Грамматический словарь", "Лексический словарь"]
+                "Грамматический словарь", "Лексический словарь", "Training"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +57,13 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
             catch {
                 
             }
+        }
+        
+        if indexPath.row == 5 {
+            let vc = TrainingViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true)
         }
         
         

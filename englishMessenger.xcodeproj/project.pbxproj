@@ -13,6 +13,7 @@
 		8374B8FB29A2402F0047476E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8374B8FA29A2402F0047476E /* ChatViewController.swift */; };
 		8374B8FD29A291030047476E /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8374B8FC29A291030047476E /* StorageManager.swift */; };
 		8376513429AFDD5900FF778B /* Simpleoak-RpP3o.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8376513329AFDD5900FF778B /* Simpleoak-RpP3o.ttf */; };
+		83919F6E29C5ADDE0058C1D1 /* TrainingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83919F6D29C5ADDE0058C1D1 /* TrainingViewController.swift */; };
 		83939509299E11E40048BB07 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83939508299E11E40048BB07 /* DatabaseManager.swift */; };
 		8395F734299CCEC00038376B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F733299CCEC00038376B /* AppDelegate.swift */; };
 		8395F736299CCEC00038376B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F735299CCEC00038376B /* SceneDelegate.swift */; };
@@ -61,6 +62,7 @@
 		8374B8FA29A2402F0047476E /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		8374B8FC29A291030047476E /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		8376513329AFDD5900FF778B /* Simpleoak-RpP3o.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Simpleoak-RpP3o.ttf"; path = "../../../../../Downloads/Simpleoak/Simpleoak-RpP3o.ttf"; sourceTree = "<group>"; };
+		83919F6D29C5ADDE0058C1D1 /* TrainingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingViewController.swift; sourceTree = "<group>"; };
 		83939508299E11E40048BB07 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		8395F730299CCEC00038376B /* englishMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = englishMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8395F733299CCEC00038376B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				8311525E299F85410001B758 /* StartViewController.swift */,
 				83115262299FA49B0001B758 /* NewProfileViewController.swift */,
 				8374B8FA29A2402F0047476E /* ChatViewController.swift */,
+				83919F6D29C5ADDE0058C1D1 /* TrainingViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83919F6E29C5ADDE0058C1D1 /* TrainingViewController.swift in Sources */,
 				8395F74F299CD2F60038376B /* LoginViewController.swift in Sources */,
 				8395F751299CD3300038376B /* RegisterViewController.swift in Sources */,
 				83546356299D77D4000FCC1B /* TestViewController.swift in Sources */,
