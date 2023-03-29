@@ -9,7 +9,6 @@ import UIKit
 import Alamofire
 
 // MARK: structures for get data from JSON
-
 // MARK: - Welcome
 struct Welcome: Codable {
     let software: Software
@@ -77,7 +76,12 @@ struct Software: Codable {
 
 
 class TrainingViewController: UIViewController, UITextFieldDelegate {
-
+    
+    /// словарь для хранения сообщений о грамматических ошибках
+    var grammarMistakeMessages: [Int: String] = [-1: ""]
+    /// словарь для хранения сообщений о том, как можно исправить грамматическую ошибку
+    var grammarMistakeReplacements: [Int: String] = [-1: ""]
+    
     private let buttonSend: UIButton = {
         let button = UIButton()
         button.setTitle("Send", for: .normal)
@@ -89,8 +93,12 @@ class TrainingViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    private let textField: UITextField = {
-        let textField = UITextField()
+    private let textField: UITextView = {
+        let textField = UITextView()
+        textField.textContainer.maximumNumberOfLines = 0
+        textField.textContainer.lineBreakMode = .byWordWrapping
+        textField.text = "Enter text here"
+        textField.font = UIFont.systemFont(ofSize: 18)
         textField.autocorrectionType = .no
         return textField
     }()
@@ -100,15 +108,20 @@ class TrainingViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        
         let button = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(buttonTapped))
         button.tintColor = .systemPink
         navigationItem.leftBarButtonItem = button
         
         buttonSend.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         
-        textField.delegate = self
-        textField.placeholder = "Enter text"
+//        textField.delegate = self
+//        textField.placeholder = "Enter text"
         textField.returnKeyType = .done
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(textViewTapped(_:)))
+        textField.addGestureRecognizer(tapGesture)
+        
+        
         view.addSubview(textField)
         view.addSubview(buttonSend)
         
@@ -119,7 +132,7 @@ class TrainingViewController: UIViewController, UITextFieldDelegate {
         
         
         
-        textField.frame = CGRect(x: view.bounds.midX - 125, y: view.bounds.minY + 100, width: 250, height: 100)
+        textField.frame = CGRect(x: view.bounds.midX - 150, y: view.bounds.minY + 100, width: 300, height: 300)
         buttonSend.frame = CGRect(x: textField.left, y: textField.bottom + 20, width: 250, height: 70)
     }
     
@@ -128,9 +141,51 @@ class TrainingViewController: UIViewController, UITextFieldDelegate {
        dismiss(animated: true, completion: nil)
     }
     
+    @objc func textViewTapped(_ sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            // Get the NSRange of the selected text
+            if let selectedRange = textField.selectedTextRange {
+                let start = selectedRange.start
+                let end = selectedRange.end
+                let startIndex = textField.offset(from: textField.beginningOfDocument, to: start)
+                let length = textField.offset(from: start, to: end)
+                // let position = textField.position(from: start, offset: length)
+                let selectedText = (textField.text as NSString).substring(with: NSRange(location: startIndex, length: length))
+                // Perform an action on the selected text
+                print("Selected Text: \(selectedText)")
+                
+                if !selectedText.isEmpty {
+                    
+                    
+                    guard let message = grammarMistakeMessages[startIndex],
+                          let replacement = grammarMistakeReplacements[startIndex] else {
+                        return
+                    }
+                    
+                    showGrammarMistake(mistake: message, replacement: replacement)
+                }
+            }
+        }
+    }
+    
+    /*
+     Hello,
+     My name is Susan. I'm forteen and I life in Germany. My hobbys are go to discos and jogging, sometimes I hear music in the radio. In the July I go swimming in a sea . I haven't any brothers or sisters. We take busses to scool. I visit year 9 at my school. My birthday is on Friday. I hope I will become a new guitar.
+     I'm looking forward to get a e-mail from you.
+    */
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
             textField.resignFirstResponder()
             return true
+    }
+    
+    func showGrammarMistake(mistake: String, replacement: String) {
+        let popupVC = GrammarMistakeViewController()
+        
+        popupVC.grammarMistakeDescription.text = "Грамматическая ошибка: \n \(mistake)"
+        popupVC.grammarReplaceLabel.text = "Возможная замена \n \(replacement)"
+        popupVC.modalPresentationStyle = .popover
+        present(popupVC, animated: true)
     }
 }
 
@@ -147,14 +202,14 @@ extension TrainingViewController {
     }
     
     /// функция для получения сообщения грамматической ошибки
-    private func getMatchMessageMistake(array: [Match]) -> String {
-        let res = array[0].message
+    private func getMatchMessageMistake(value: Match) -> String {
+        let res = value.message
         return res
     }
     
     /// функция для получения массива типа Replacement из массива типа Match
-    private func getMatchArrayOfReplacements(array: [Match]) -> [Replacement] {
-        let res = array[0].replacements
+    private func getMatchArrayOfReplacements(value: Match) -> [Replacement] {
+        let res = value.replacements
         return res
     }
     
@@ -164,17 +219,19 @@ extension TrainingViewController {
         return res
     }
     
-    private func getReplaceWord(array: [Match]) -> Int {
-        let res = array[0].offset
+    /// позиция слова с ошибкой
+    private func getPositionOfWord(value: Match) -> Int {
+        let res = value.offset
         return res
     }
     
-    @objc private func sendButtonTapped() {
-        let text = textField.text!
-        
-        let parameters = ["text": "\(text)", "language": "en-US"]
-        print(parameters)
-        let url = "https://api.languagetoolplus.com/v2/check"
+    /// длина слова с ошибкой
+    private func getLengthOfWord(value: Match) -> Int {
+        let res = value.length
+        return res
+    }
+    
+    private func makeRequest(url: String, parameters: [String: String], text: String) {
         AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.httpBody).responseJSON(completionHandler: { response in
             // полученные данные из запроса
             let result = response.data
@@ -183,53 +240,75 @@ extension TrainingViewController {
             var grammarMistakes: [Match]
             // array типа Replacement
             var grammarReplacements: [Replacement]
+            //
+            
+            
 
             do {
                 // с помощью JSONDecoder переводим данные из полученного JSON в структуру Welcome
                 let welcom = try! JSONDecoder().decode(Welcome.self, from: result!)
-
+                
+                let attributedString = NSMutableAttributedString(string: text)
+                
+                
+                
+                
                 // сохраняем в массив grammarMistakes данные из matches
                 grammarMistakes = welcom.matches
-                print(grammarMistakes)
-                // получаем сообщение о грамматической ошибке
-                let grammarMistakeMessage = self.getMatchMessageMistake(array: grammarMistakes)
+                
+                for mistake in grammarMistakes {
+                    print(mistake.offset)
+                }
+                
+                for mistake in grammarMistakes {
+                    /// сохраняем в массив grammarReplacements данные из grammarMistakes
+                    grammarReplacements = self.getMatchArrayOfReplacements(value: mistake)
+                    
+                    /// получаем возможное исправление грамматической ошибки
+                    let grammarReplaceMessage = self.getMatchReplace(array: grammarReplacements)
 
-                // сохраняем в массив grammarReplacements данные из grammarMistakes
-                grammarReplacements = self.getMatchArrayOfReplacements(array: grammarMistakes)
-
-                // получаем возможное исправление грамматической ошибки
-                let grammarReplaceMessage = self.getMatchReplace(array: grammarReplacements)
-
-                // alert с выводом грамматической ошибки
-                self.alertGrammarMistake(message: grammarMistakeMessage)
-
-                // получение позиции, где была допущена грамматическая ошибка
-                let position = self.getReplaceWord(array: grammarMistakes)
+                    /// получение позиции, где была допущена грамматическая ошибка
+                    let position = self.getPositionOfWord(value: mistake)
+                    
+                    /// получение длины слова, в котором была допущена грамматическая ошибка
+                    let length = self.getLengthOfWord(value: mistake)
+                    
+                    /// получение сообщения о грамматической ошибке
+                    let grammarMistakeMessage = self.getMatchMessageMistake(value: mistake)
+                    
+                    /// заношу полученное сообщение в dictionaries сообщений об ошибках
+                    self.grammarMistakeMessages.updateValue(grammarMistakeMessage, forKey: position)
+                    self.grammarMistakeReplacements.updateValue(grammarReplaceMessage, forKey: position)
+                    
+                    /// выделение цветом грамматической ошибки
+                    let range = NSRange(location: position, length: length)
+                    attributedString.addAttribute(NSAttributedString.Key.backgroundColor, value: UIColor(named: "lightred"), range: range)
+                    
+                }
                 
-                // получение позиции в textField, где была допущена ошибка
-                let mistakePosition = self.textField.position(from: self.textField.beginningOfDocument, offset: position)
-                
-                // выделение диапозона в textField с ошибочным словом
-                let wordRange = self.textField.tokenizer.rangeEnclosingPosition(mistakePosition!, with: .word, inDirection: .init(rawValue: 0))
-                
-                // само слово с ошибкой
-                let word = self.textField.text(in: wordRange!)
-                
-                
-                // выделение цветом грамматической ошибки
-                let attributedString = NSMutableAttributedString(string: text)
-                let range = (text as NSString).range(of: "\(word!)")
-                attributedString.addAttribute(NSAttributedString.Key.backgroundColor, value: UIColor.red, range: range)
                 self.textField.attributedText = attributedString
-                self.textField.reloadInputViews()
-                
-            } catch {
+                self.textField.font = UIFont.systemFont(ofSize: 18)
+                print(self.grammarMistakeMessages)
+            }
+            catch {
                 print("error in decode json!")
             }
         })
     }
-
     
-    
+    @objc private func sendButtonTapped() {
+        let text = textField.text!
+        
+        let parameters = ["text": "\(text)", "language": "en-US"]
+        print(parameters)
+        let url = "https://api.languagetoolplus.com/v2/check"
+        
+        DispatchQueue.main.async {
+            self.makeRequest(url: url, parameters: parameters, text: text)
+        }
+        
+        
+        
+    }
     
 }

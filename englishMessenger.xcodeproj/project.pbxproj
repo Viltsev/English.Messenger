@@ -28,6 +28,8 @@
 		8395F757299CD37B0038376B /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F756299CD37B0038376B /* NewConversationViewController.swift */; };
 		8395F759299CD39D0038376B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F758299CD39D0038376B /* ProfileViewController.swift */; };
 		8395F75C299CDA0E0038376B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F75B299CDA0E0038376B /* Extensions.swift */; };
+		83BCC8B329CDA03400571AA0 /* GrammarMistakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BCC8B129CDA03400571AA0 /* GrammarMistakeViewController.swift */; };
+		83BCC8B429CDA03400571AA0 /* GrammarMistakeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83BCC8B229CDA03400571AA0 /* GrammarMistakeViewController.xib */; };
 		83F043B229AFD50100B2AA85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 83F043B129AFD50100B2AA85 /* GoogleService-Info.plist */; };
 		83F043B429AFD55900B2AA85 /* Pods_englishMessenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EFD1B7327C36EBAACDB9C25 /* Pods_englishMessenger.framework */; };
 		83F043B529AFD55900B2AA85 /* Pods_englishMessenger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8EFD1B7327C36EBAACDB9C25 /* Pods_englishMessenger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -79,6 +81,8 @@
 		8395F756299CD37B0038376B /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		8395F758299CD39D0038376B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		8395F75B299CDA0E0038376B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		83BCC8B129CDA03400571AA0 /* GrammarMistakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrammarMistakeViewController.swift; sourceTree = "<group>"; };
+		83BCC8B229CDA03400571AA0 /* GrammarMistakeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GrammarMistakeViewController.xib; sourceTree = "<group>"; };
 		83F043AD29AFD4C700B2AA85 /* Realm.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Realm.xcframework; sourceTree = "<group>"; };
 		83F043AF29AFD4CF00B2AA85 /* RealmSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = RealmSwift.xcframework; sourceTree = "<group>"; };
 		83F043B129AFD50100B2AA85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -172,6 +176,8 @@
 				83115262299FA49B0001B758 /* NewProfileViewController.swift */,
 				8374B8FA29A2402F0047476E /* ChatViewController.swift */,
 				83919F6D29C5ADDE0058C1D1 /* TrainingViewController.swift */,
+				83BCC8B129CDA03400571AA0 /* GrammarMistakeViewController.swift */,
+				83BCC8B229CDA03400571AA0 /* GrammarMistakeViewController.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -282,6 +288,7 @@
 				8376513429AFDD5900FF778B /* Simpleoak-RpP3o.ttf in Resources */,
 				8395F73D299CCEC20038376B /* Assets.xcassets in Resources */,
 				8395F73B299CCEC00038376B /* Main.storyboard in Resources */,
+				83BCC8B429CDA03400571AA0 /* GrammarMistakeViewController.xib in Resources */,
 				83F043B229AFD50100B2AA85 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,6 +344,7 @@
 			files = (
 				83919F6E29C5ADDE0058C1D1 /* TrainingViewController.swift in Sources */,
 				8395F74F299CD2F60038376B /* LoginViewController.swift in Sources */,
+				83BCC8B329CDA03400571AA0 /* GrammarMistakeViewController.swift in Sources */,
 				8395F751299CD3300038376B /* RegisterViewController.swift in Sources */,
 				83546356299D77D4000FCC1B /* TestViewController.swift in Sources */,
 				8395F757299CD37B0038376B /* NewConversationViewController.swift in Sources */,

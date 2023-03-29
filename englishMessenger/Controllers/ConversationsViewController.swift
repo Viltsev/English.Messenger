@@ -28,6 +28,12 @@ class ConversationsViewController: UIViewController {
     
     private var conversations = [Conversation]()
     
+    /// все существующие пользователи из базы данных
+    private var users = [[String: String]]()
+    
+    /// индекс пользователя
+    private var index = Int()
+    
     private let tableView: UITableView = {
         let table = UITableView()
         table.isHidden = true
@@ -62,6 +68,9 @@ class ConversationsViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose,
                                                             target: self,
                                                             action: #selector(didTapComposeButton))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play,
+                                                           target: self,
+                                                           action: #selector(goToRandomDialog))
         
         /// add subviews
         view.addSubview(tableView)
@@ -145,6 +154,72 @@ class ConversationsViewController: UIViewController {
         present(navVC, animated: true)
     }
     
+    /// random dialog's searching
+    @objc private func goToRandomDialog() {
+        DatabaseManager.shared.getAllUsers(completion: { [weak self] result in
+            switch result {
+            /// получаем всех существующих пользователей в usersCollection
+            case .success(let usersCollection):
+                
+                /// с помощью функции randomElement получаем случайного пользователя из usersCollection
+                if let randomUser = usersCollection.randomElement() {
+                    
+                    /// проверяем, есть ли значения name и email для данного user
+                    guard let name = randomUser["name"], let email = randomUser["email"] else {
+                        return
+                    }
+                    
+                    /// из UserDefaults по ключу email получаем почту текущего пользователя
+                    let currentEmail = UserDefaults.standard.value(forKey: "email") as! String
+                    
+                    /// с помощью функции safeEmail преобразуем данную почту в "safe" вид
+                    let safeCurrentEmail = DatabaseManager.safeEmail(emailAddress: currentEmail)
+                    
+                    /// если в массиве диалогов уже содержится искомый рандомный диалог
+                    if self!.conversations.contains(where: {$0.otherUserEmail == email}) {
+                        
+                        /// находим индекс искомого пользователя по его email
+                        for i in 0 ..< (self?.conversations.count)! {
+                            if self?.conversations[i].otherUserEmail == email {
+                                self?.index = i
+                                break
+                            }
+                        }
+                        
+                        /// достаем по индексу данные об диалоге с искомым пользователем
+                        let model = self?.conversations[self!.index]
+                        
+                        /// осуществляем переход в диалог к этому пользователю
+                        let vc = ChatViewController(with: model!.otherUserEmail, id: model?.id)
+                        vc.title = model?.name
+                        vc.navigationItem.largeTitleDisplayMode = .never
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                    /// иначе начинаем новый диалог
+                    else {
+                        
+                        /// если искомый пользователь не есть текущий пользователь
+                        if email != safeCurrentEmail {
+                            /// создаем новый диалог с искомым пользователем
+                            let vc = ChatViewController(with: email, id: nil)
+                            vc.isNewConversation = true
+                            vc.title = name
+                            vc.navigationItem.largeTitleDisplayMode = .never
+                            self?.navigationController?.pushViewController(vc, animated: true)
+                        }
+                        /// иначе заново вызываем функцию goToRandomDialog()
+                        else {
+                            self?.goToRandomDialog()
+                        }
+                    }
+                }
+            case .failure(let error):
+                print("Failed to get users: \(error)")
+            }
+        })
+        
+    }
+    
     private func createNewConversation(result: [String: String]) {
         guard let name = result["name"], let email = result["email"] else {
             return
@@ -155,12 +230,6 @@ class ConversationsViewController: UIViewController {
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-//    @objc private func backToProfileButton() {
-//        let vc = NewProfileViewController()
-//        let navVC = UINavigationController(rootViewController: vc)
-//        present(navVC, animated: true)
-//    }
 }
 
 extension ConversationsViewController: UITableViewDelegate, UITableViewDataSource {
