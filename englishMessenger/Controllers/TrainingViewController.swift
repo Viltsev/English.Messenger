@@ -133,7 +133,7 @@ class TrainingViewController: UIViewController, UITextFieldDelegate {
         
         
         textField.frame = CGRect(x: view.bounds.midX - 150, y: view.bounds.minY + 100, width: 300, height: 300)
-        buttonSend.frame = CGRect(x: textField.left, y: textField.bottom + 20, width: 250, height: 70)
+        buttonSend.frame = CGRect(x: textField.left + 25, y: textField.bottom + 20, width: 250, height: 70)
     }
     
     
@@ -242,8 +242,6 @@ extension TrainingViewController {
             var grammarReplacements: [Replacement]
             //
             
-            
-
             do {
                 // с помощью JSONDecoder переводим данные из полученного JSON в структуру Welcome
                 let welcom = try! JSONDecoder().decode(Welcome.self, from: result!)
