@@ -6,18 +6,12 @@
 //
 
 import UIKit
-import FirebaseAuth
-class TestViewController: UIViewController {
+import Alamofire
 
-    // current user
-    let user = Auth.auth().currentUser
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        title = "Test"
-        view.backgroundColor = .orange
-    }
-    
+class TestViewController: UIViewController {
+//    func sendMessage(message: String) {
+//        field.text = message
+//    }
 
 }
+

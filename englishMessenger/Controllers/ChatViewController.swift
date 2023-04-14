@@ -12,6 +12,10 @@ import Foundation
 import Alamofire
 
 
+protocol SendMessage {
+    func sendMessage(message: String)
+}
+
 struct Message: MessageType {
     public var sender: SenderType
     public var messageId: String
@@ -56,7 +60,12 @@ struct Sender: SenderType {
     
 }
 
+
 class ChatViewController: MessagesViewController {
+    
+    var userMessage: String = ""
+    var checkSend: Bool = false
+    var delegate: SendMessage?
     
     public static let dateFormatter: DateFormatter = {
         let format = DateFormatter()
@@ -97,11 +106,24 @@ class ChatViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureMessageInputBarCheck()
         view.backgroundColor = .red
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit,
+                                                            target: self,
+                                                            action: #selector(grammarExplain))
+
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
+    }
+    
+    @objc func grammarExplain() {
+        UserDefaults.standard.set(userMessage, forKey: "userMessage")
+        let vc = GrammarChatViewController()
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
     }
     
     private func listenForMessages(id: String, shouldScrollToBottom: Bool) {
@@ -137,6 +159,16 @@ class ChatViewController: MessagesViewController {
             listenForMessages(id: conversationID, shouldScrollToBottom: true)
         }
     }
+    
+    
+    func configureMessageInputBarCheck() {
+        messageInputBar.delegate = self
+        messageInputBar.sendButton.title = "Check"
+    }
+    func configureMessageInputBarSend() {
+        messageInputBar.delegate = self
+        messageInputBar.sendButton.title = "Send"
+    }
 }
 
 extension ChatViewController: InputBarAccessoryViewDelegate {
@@ -148,40 +180,52 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             return
         }
         // send message
-        print("\(text)")
+        userMessage = text
+    
         
         let message = Message(sender: selfSender,
                               messageId: messageID,
                               sentDate: Date(),
                               kind: .text(text))
         
-        if isNewConversation {
-            // create conversation
-            DatabaseManager.shared.createNewConversation(with: otherUserEmail, name: self.title ?? "User", firstMessage: message, completion: { success in
-                if success {
-                    print("message sent")
-                    self.isNewConversation = false
+        if checkSend {
+            if isNewConversation {
+                // create conversation
+                DatabaseManager.shared.createNewConversation(with: otherUserEmail, name: self.title ?? "User", firstMessage: message, completion: { success in
+                    if success {
+                        print("message sent")
+                        self.isNewConversation = false
+                    }
+                    else {
+                        print("message didn't send")
+                    }
+                })
+            }
+            else {
+                guard let conversationID = conversationID, let name = self.title else {
+                    return
                 }
-                else {
-                    print("message didn't send")
-                }
-            })
+                DatabaseManager.shared.sendMessage(to: conversationID, otherUserEmail: otherUserEmail, name: name, newMessage: message, completion: { success in
+                    if success {
+                        print("message sent")
+                    }
+                    else {
+                        print("failed to send")
+                    }
+                })
+            }
+            messageInputBar.inputTextView.text = ""
+            configureMessageInputBarCheck()
+            checkSend = false
         }
         else {
-            guard let conversationID = conversationID, let name = self.title else {
-                return
-            }
-            DatabaseManager.shared.sendMessage(to: conversationID, otherUserEmail: otherUserEmail, name: name, newMessage: message, completion: { success in
-                if success {
-                    print("message sent")
-                }
-                else {
-                    print("failed to send")
-                }
-            })
+            configureMessageInputBarSend()
+            checkSend = true
         }
         
+        
     }
+    
     
     private func createMessageId() -> String? {
         guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {

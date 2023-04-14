@@ -8,8 +8,12 @@
 import Foundation
 import FirebaseDatabase
 
+//protocol GetLevel {
+//    func getUserLevel(level: String)
+//}
 
 final class DatabaseManager {
+//    var delegate: GetLevel?
     static let shared = DatabaseManager()
     
     private let database = Database.database().reference()
@@ -396,6 +400,20 @@ extension DatabaseManager {
             })
             completion(.success(messages))
         } )
+    }
+    
+    // MARK: функция обновления текущего уровня владения языком пользователя
+    public func updateLevel() {
+        // получение почты текущего пользователя из UserDefaults
+        guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        // преобразуем почту текущего пользователя к виду safeEmail (без точек и других неприемлимых символов)
+        let safeEmail = DatabaseManager.safeEmail(emailAddress: currentEmail)
+        let usersRef = self.database.child("\(safeEmail)")
+        let userLevel = UserDefaults.standard.value(forKey: "englishLevel") as? String
+        usersRef.child("level").setValue(userLevel)
+        
     }
     
     

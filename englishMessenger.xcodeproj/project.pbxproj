@@ -10,6 +10,13 @@
 		8311525F299F85410001B758 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8311525E299F85410001B758 /* StartViewController.swift */; };
 		83115263299FA49B0001B758 /* NewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83115262299FA49B0001B758 /* NewProfileViewController.swift */; };
 		83546356299D77D4000FCC1B /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83546355299D77D4000FCC1B /* TestViewController.swift */; };
+		835B34D929E0B6A90019C199 /* EnglishTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B34D829E0B6A90019C199 /* EnglishTestViewController.swift */; };
+		835B34DB29E0B6D80019C199 /* TestResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B34DA29E0B6D80019C199 /* TestResultsViewController.swift */; };
+		835B34E329E0C58B0019C199 /* Pods_englishMessenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EFD1B7327C36EBAACDB9C25 /* Pods_englishMessenger.framework */; };
+		835B34EA29E0C6E40019C199 /* Realm.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F043AD29AFD4C700B2AA85 /* Realm.xcframework */; };
+		835B34EB29E0C6E40019C199 /* Realm.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83F043AD29AFD4C700B2AA85 /* Realm.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		835B34ED29E0C6E60019C199 /* RealmSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F043AF29AFD4CF00B2AA85 /* RealmSwift.xcframework */; };
+		835B34EE29E0C6E60019C199 /* RealmSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83F043AF29AFD4CF00B2AA85 /* RealmSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8374B8FB29A2402F0047476E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8374B8FA29A2402F0047476E /* ChatViewController.swift */; };
 		8374B8FD29A291030047476E /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8374B8FC29A291030047476E /* StorageManager.swift */; };
 		8376513429AFDD5900FF778B /* Simpleoak-RpP3o.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8376513329AFDD5900FF778B /* Simpleoak-RpP3o.ttf */; };
@@ -28,28 +35,22 @@
 		8395F757299CD37B0038376B /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F756299CD37B0038376B /* NewConversationViewController.swift */; };
 		8395F759299CD39D0038376B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F758299CD39D0038376B /* ProfileViewController.swift */; };
 		8395F75C299CDA0E0038376B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F75B299CDA0E0038376B /* Extensions.swift */; };
+		83990E5329E7F57D00BEC1BD /* GrammarChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83990E5229E7F57D00BEC1BD /* GrammarChatViewController.swift */; };
 		83BCC8B329CDA03400571AA0 /* GrammarMistakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BCC8B129CDA03400571AA0 /* GrammarMistakeViewController.swift */; };
 		83BCC8B429CDA03400571AA0 /* GrammarMistakeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83BCC8B229CDA03400571AA0 /* GrammarMistakeViewController.xib */; };
 		83F043B229AFD50100B2AA85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 83F043B129AFD50100B2AA85 /* GoogleService-Info.plist */; };
-		83F043B429AFD55900B2AA85 /* Pods_englishMessenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EFD1B7327C36EBAACDB9C25 /* Pods_englishMessenger.framework */; };
-		83F043B529AFD55900B2AA85 /* Pods_englishMessenger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8EFD1B7327C36EBAACDB9C25 /* Pods_englishMessenger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		83F043B729AFD55B00B2AA85 /* Realm.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F043AD29AFD4C700B2AA85 /* Realm.xcframework */; };
-		83F043B829AFD55B00B2AA85 /* Realm.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83F043AD29AFD4C700B2AA85 /* Realm.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		83F043B929AFD55C00B2AA85 /* RealmSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F043AF29AFD4CF00B2AA85 /* RealmSwift.xcframework */; };
-		83F043BA29AFD55C00B2AA85 /* RealmSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83F043AF29AFD4CF00B2AA85 /* RealmSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		83FF34EA29B3531D004D90CC /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF34E929B3531D004D90CC /* ConversationTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		83F043B629AFD55900B2AA85 /* Embed Frameworks */ = {
+		835B34EC29E0C6E40019C199 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				83F043B529AFD55900B2AA85 /* Pods_englishMessenger.framework in Embed Frameworks */,
-				83F043BA29AFD55C00B2AA85 /* RealmSwift.xcframework in Embed Frameworks */,
-				83F043B829AFD55B00B2AA85 /* Realm.xcframework in Embed Frameworks */,
+				835B34EB29E0C6E40019C199 /* Realm.xcframework in Embed Frameworks */,
+				835B34EE29E0C6E60019C199 /* RealmSwift.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -61,6 +62,8 @@
 		8311525E299F85410001B758 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		83115262299FA49B0001B758 /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
 		83546355299D77D4000FCC1B /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		835B34D829E0B6A90019C199 /* EnglishTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnglishTestViewController.swift; sourceTree = "<group>"; };
+		835B34DA29E0B6D80019C199 /* TestResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestResultsViewController.swift; sourceTree = "<group>"; };
 		8374B8FA29A2402F0047476E /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		8374B8FC29A291030047476E /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		8376513329AFDD5900FF778B /* Simpleoak-RpP3o.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Simpleoak-RpP3o.ttf"; path = "../../../../../Downloads/Simpleoak/Simpleoak-RpP3o.ttf"; sourceTree = "<group>"; };
@@ -81,6 +84,7 @@
 		8395F756299CD37B0038376B /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		8395F758299CD39D0038376B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		8395F75B299CDA0E0038376B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		83990E5229E7F57D00BEC1BD /* GrammarChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrammarChatViewController.swift; sourceTree = "<group>"; };
 		83BCC8B129CDA03400571AA0 /* GrammarMistakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrammarMistakeViewController.swift; sourceTree = "<group>"; };
 		83BCC8B229CDA03400571AA0 /* GrammarMistakeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GrammarMistakeViewController.xib; sourceTree = "<group>"; };
 		83F043AD29AFD4C700B2AA85 /* Realm.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Realm.xcframework; sourceTree = "<group>"; };
@@ -96,9 +100,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				83F043B429AFD55900B2AA85 /* Pods_englishMessenger.framework in Frameworks */,
-				83F043B929AFD55C00B2AA85 /* RealmSwift.xcframework in Frameworks */,
-				83F043B729AFD55B00B2AA85 /* Realm.xcframework in Frameworks */,
+				835B34E329E0C58B0019C199 /* Pods_englishMessenger.framework in Frameworks */,
+				835B34ED29E0C6E60019C199 /* RealmSwift.xcframework in Frameworks */,
+				835B34EA29E0C6E40019C199 /* Realm.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,6 +182,9 @@
 				83919F6D29C5ADDE0058C1D1 /* TrainingViewController.swift */,
 				83BCC8B129CDA03400571AA0 /* GrammarMistakeViewController.swift */,
 				83BCC8B229CDA03400571AA0 /* GrammarMistakeViewController.xib */,
+				835B34D829E0B6A90019C199 /* EnglishTestViewController.swift */,
+				835B34DA29E0B6D80019C199 /* TestResultsViewController.swift */,
+				83990E5229E7F57D00BEC1BD /* GrammarChatViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -235,7 +242,7 @@
 				8395F72D299CCEBF0038376B /* Frameworks */,
 				8395F72E299CCEBF0038376B /* Resources */,
 				6A3F34BAAC007054B20CE211 /* [CP] Embed Pods Frameworks */,
-				83F043B629AFD55900B2AA85 /* Embed Frameworks */,
+				835B34EC29E0C6E40019C199 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -348,6 +355,7 @@
 				8395F751299CD3300038376B /* RegisterViewController.swift in Sources */,
 				83546356299D77D4000FCC1B /* TestViewController.swift in Sources */,
 				8395F757299CD37B0038376B /* NewConversationViewController.swift in Sources */,
+				83990E5329E7F57D00BEC1BD /* GrammarChatViewController.swift in Sources */,
 				8395F738299CCEC00038376B /* ConversationsViewController.swift in Sources */,
 				8395F755299CD34A0038376B /* VideoPlayerViewController.swift in Sources */,
 				83939509299E11E40048BB07 /* DatabaseManager.swift in Sources */,
@@ -361,6 +369,8 @@
 				8374B8FB29A2402F0047476E /* ChatViewController.swift in Sources */,
 				83115263299FA49B0001B758 /* NewProfileViewController.swift in Sources */,
 				8374B8FD29A291030047476E /* StorageManager.swift in Sources */,
+				835B34DB29E0B6D80019C199 /* TestResultsViewController.swift in Sources */,
+				835B34D929E0B6A90019C199 /* EnglishTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,6 +535,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--generate-entitlement-der";
 				PRODUCT_BUNDLE_IDENTIFIER = DV.englishMessenger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -556,6 +567,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--generate-entitlement-der";
 				PRODUCT_BUNDLE_IDENTIFIER = DV.englishMessenger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

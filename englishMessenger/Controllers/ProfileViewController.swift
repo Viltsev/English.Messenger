@@ -59,6 +59,13 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
         
+        if indexPath.row == 1 {
+            let vc = TestResultsViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true)
+        }
+        
         if indexPath.row == 5 {
             let vc = TrainingViewController()
             let nav = UINavigationController(rootViewController: vc)
