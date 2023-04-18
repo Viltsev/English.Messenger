@@ -8,18 +8,25 @@
 import UIKit
 import Alamofire
 
-class GrammarChatViewController: UIViewController {
-
-    /// словарь для хранения сообщений о грамматических ошибках
+class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    // словарь для хранения сообщений о грамматических ошибках
     var grammarMistakeMessages: [Int: String] = [-1: ""]
-    /// словарь для хранения сообщений о том, как можно исправить грамматическую ошибку
+    // словарь для хранения сообщений о том, как можно исправить грамматическую ошибку
     var grammarMistakeReplacements: [Int: String] = [-1: ""]
+    // tableView
+    private let tableView: UITableView = {
+        let table = UITableView()
+        return table
+    }()
+    // массив грамматических ошибок
+    var mistakesArray: [String] = {
+        let item = [String]()
+        return item
+    }()
     
-//    var data: [String] = ["Example"]
-//    var tableView: UITableView!
-//    let cellReuseIdentifier = "cell"
-    
-    
+    // MARK: основные UI-элементы
+    // TextView с ошибками
     private let fieldWrong: UITextView = {
         let field = UITextView()
         field.text = "message here"
@@ -29,7 +36,7 @@ class GrammarChatViewController: UIViewController {
         field.sizeToFit()
         return field
     }()
-    
+    // TextView с исправленными ошибками
     private let fieldRight: UITextView = {
         let field = UITextView()
         field.text = "right message"
@@ -43,20 +50,30 @@ class GrammarChatViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Grammar Mistakes"
+        view.backgroundColor = .white
+        
+        // добавление UI-элементов на экран
         view.addSubview(fieldWrong)
         view.addSubview(fieldRight)
+        view.addSubview(tableView)
         
+        // кнопка для возврата на предыдущий экран
         let button = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(buttonTapped))
         button.tintColor = .systemPink
         navigationItem.leftBarButtonItem = button
         
-        title = "Test"
-        view.backgroundColor = .white
-        
         fieldWrong.dataDetectorTypes = UIDataDetectorTypes.all
         fieldWrong.isEditable = false
         
+        // передаем в текстовые поля сообщение пользователя
         fieldWrong.text = UserDefaults.standard.value(forKey: "userMessage") as? String
+        fieldRight.text = UserDefaults.standard.value(forKey: "userMessage") as? String
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        // вызов функции проверки на грамматические ошибки
         checkGrammar()
     }
 
@@ -69,26 +86,51 @@ class GrammarChatViewController: UIViewController {
                              width: messageFieldWidth,
                              height: 200)
         fieldRight.frame = CGRect(x: messageFieldX, y: fieldWrong.bottom + 20, width: messageFieldWidth, height: 200)
+        tableView.frame = CGRect(x: messageFieldX, y: fieldRight.bottom + 20, width: messageFieldWidth, height: 200)
     }
     
     @objc private func buttonTapped() {
        dismiss(animated: true, completion: nil)
     }
     
+    // MARK: функция проверки сообщения на грамматические ошибки
     func checkGrammar() {
+        // считывание текста из fieldWrong
         let text = fieldWrong.text!
-        
+        // параметры
         let parameters = ["text": "\(text)", "language": "en-US"]
-        print(parameters)
+        // ссылка на languagetool
         let url = "https://api.languagetoolplus.com/v2/check"
         
+        // асинхронно вызываем функцию запроса на сервис languagetool
         DispatchQueue.main.async {
             self.makeRequest(url: url, parameters: parameters, text: text)
         }
     }
+    
+    // MARK: TableView Functions
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return mistakesArray.count
+    }
+        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+        cell.textLabel?.text = mistakesArray[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        // получаем для соответствующей ячейки таблицы ошибку и замену
+        let message = grammarMistakeMessages[indexPath.row]
+        let replacement = grammarMistakeReplacements[indexPath.row]
+        
+        // вызываем функцию с описанием ошибки и её предложенным исправлением
+        showGrammarMistake(mistake: message!, replacement: replacement!)
+    }
 
 }
-
 
 
 extension GrammarChatViewController {
@@ -140,7 +182,7 @@ extension GrammarChatViewController {
     }
     
     
-    
+    // MARK: функция, осуществляющая запрос на languagetool
     public func makeRequest(url: String, parameters: [String: String], text: String) {
         AF.request(url, method: .post, parameters: parameters, encoding: URLEncoding.httpBody).responseJSON(completionHandler: { response in
             // полученные данные из запроса
@@ -150,22 +192,21 @@ extension GrammarChatViewController {
             var grammarMistakes: [Match]
             // array типа Replacement
             var grammarReplacements: [Replacement]
-            //
+            // index for tableView
+            var index = 0
             
             do {
                 // с помощью JSONDecoder переводим данные из полученного JSON в структуру Welcome
                 let welcom = try! JSONDecoder().decode(Welcome.self, from: result!)
                 
                 let attributedString = NSMutableAttributedString(string: text)
-                
-                
-                
-                
+                let newText = NSMutableAttributedString(string: text)
+                var rangeDifference = 0
                 // сохраняем в массив grammarMistakes данные из matches
                 grammarMistakes = welcom.matches
                 
                 for mistake in grammarMistakes {
-                    print(mistake.offset)
+                    print(mistake.sentence)
                 }
                 
                 for mistake in grammarMistakes {
@@ -174,7 +215,8 @@ extension GrammarChatViewController {
                     
                     /// получаем возможное исправление грамматической ошибки
                     let grammarReplaceMessage = self.getMatchReplace(array: grammarReplacements)
-
+                    print("replace word: \(grammarReplaceMessage)")
+                
                     /// получение позиции, где была допущена грамматическая ошибка
                     let position = self.getPositionOfWord(value: mistake)
                     
@@ -185,22 +227,40 @@ extension GrammarChatViewController {
                     let grammarMistakeMessage = self.getMatchMessageMistake(value: mistake)
                     
                     /// заношу полученное сообщение в dictionaries сообщений об ошибках
-                    self.grammarMistakeMessages.updateValue(grammarMistakeMessage, forKey: position)
-                    self.grammarMistakeReplacements.updateValue(grammarReplaceMessage, forKey: position)
+                    self.grammarMistakeMessages.updateValue(grammarMistakeMessage, forKey: index)
+                    self.grammarMistakeReplacements.updateValue(grammarReplaceMessage, forKey: index)
                     
                     /// выделение цветом грамматической ошибки
                     let range = NSRange(location: position, length: length)
+                    attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor(named: "lightred"), range: range)
                     
                     
-                    let linkAttributes: [NSAttributedString.Key: Any] = [.link: self.showGrammarMistake(mistake: grammarMistakeMessage, replacement: grammarReplaceMessage)]
-                    attributedString.addAttributes(linkAttributes, range: range)
+                    /// замена сообщения с ошибками на сообщение без ошибок
+                    let searchString = (text as NSString).substring(with: range)
+                    print(searchString)
+                    let replacementString = grammarReplaceMessage
+                    let newLength = grammarReplaceMessage.count
+                    let newRange = NSRange(location: position + rangeDifference, length: length)
+                    let newRangeColor = NSRange(location: position + rangeDifference, length: newLength)
                     
+                    newText.mutableString.replaceOccurrences(of: searchString, with: replacementString, range: newRange)
+                    newText.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.green, range: newRangeColor)
+                    
+                    rangeDifference += newLength - length
+                    
+                    // добавление в mistakesArray ошибки для последующего вывода в таблицу ошибок
+                    self.mistakesArray.append(searchString)
+                    index += 1
                 }
                 
+                // изменяем сообщения в полях fieldWrong и fieldRight
                 self.fieldWrong.attributedText = attributedString
                 self.fieldWrong.font = UIFont.systemFont(ofSize: 18)
+                self.fieldRight.attributedText = newText
+                self.fieldRight.font = UIFont.systemFont(ofSize: 18)
                 
-                print(self.grammarMistakeMessages)
+                // обновление таблицы с ошибками
+                self.tableView.reloadData()
             }
             catch {
                 print("error in decode json!")

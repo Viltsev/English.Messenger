@@ -29,12 +29,47 @@
         <!--Grammar-->
         <scene sceneID="9VJ-yx-U5K">
             <objects>
-                <viewController id="kgz-nq-wd4" customClass="GrammarChatViewController" customModule="englishMessenger" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="kgz-nq-wd4" customClass="TestViewController" customModule="englishMessenger" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6TF-yx-2Aw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="FqM-UA-zcc">
+                                <rect key="frame" x="0.0" y="332" width="414" height="514"/>
+                            </tableView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qqp-2q-ak1">
+                                <rect key="frame" x="20" y="48" width="374" height="128"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u7K-nN-6ul">
+                                <rect key="frame" x="20" y="184" width="374" height="128"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6jU-xK-MJg"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="6jU-xK-MJg" firstAttribute="bottom" secondItem="FqM-UA-zcc" secondAttribute="bottom" constant="16" id="AC4-Oe-GJQ"/>
+                            <constraint firstItem="qqp-2q-ak1" firstAttribute="leading" secondItem="6jU-xK-MJg" secondAttribute="leading" constant="20" id="Csd-ZH-1d7"/>
+                            <constraint firstItem="qqp-2q-ak1" firstAttribute="top" secondItem="6jU-xK-MJg" secondAttribute="top" id="HTO-PU-YHu"/>
+                            <constraint firstItem="6jU-xK-MJg" firstAttribute="trailing" secondItem="qqp-2q-ak1" secondAttribute="trailing" constant="20" id="Rs3-Vs-96C"/>
+                            <constraint firstItem="FqM-UA-zcc" firstAttribute="top" secondItem="u7K-nN-6ul" secondAttribute="bottom" constant="20" id="RyP-Dl-bs3"/>
+                            <constraint firstItem="6jU-xK-MJg" firstAttribute="trailing" secondItem="u7K-nN-6ul" secondAttribute="trailing" constant="20" id="SrS-OK-niw"/>
+                            <constraint firstItem="FqM-UA-zcc" firstAttribute="trailing" secondItem="6jU-xK-MJg" secondAttribute="trailing" id="Y4o-hS-ceC"/>
+                            <constraint firstItem="u7K-nN-6ul" firstAttribute="top" secondItem="qqp-2q-ak1" secondAttribute="bottom" constant="8" symbolic="YES" id="ZQm-pw-zC9"/>
+                            <constraint firstItem="u7K-nN-6ul" firstAttribute="leading" secondItem="6jU-xK-MJg" secondAttribute="leading" constant="20" id="hLD-Mu-LK1"/>
+                            <constraint firstItem="FqM-UA-zcc" firstAttribute="top" secondItem="u7K-nN-6ul" secondAttribute="bottom" constant="20" id="hgM-0o-WSo"/>
+                            <constraint firstItem="u7K-nN-6ul" firstAttribute="top" secondItem="qqp-2q-ak1" secondAttribute="bottom" constant="8" symbolic="YES" id="iSj-bg-ITW"/>
+                            <constraint firstItem="FqM-UA-zcc" firstAttribute="leading" secondItem="6jU-xK-MJg" secondAttribute="leading" id="ySM-6Q-P3Z"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Grammar" largeTitleDisplayMode="always" id="cpf-IU-rah"/>
                 </viewController>
@@ -159,6 +194,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
