@@ -26,7 +26,7 @@ class ConversationsViewController: UIViewController {
 
     private let spinner = JGProgressHUD(style: .dark)
     
-    private var conversations = [Conversation]()
+    public var conversations = [Conversation]()
     
     /// все существующие пользователи из базы данных
     private var users = [[String: String]]()
@@ -34,7 +34,7 @@ class ConversationsViewController: UIViewController {
     /// индекс пользователя
     private var index = Int()
     
-    private let tableView: UITableView = {
+    public let tableView: UITableView = {
         let table = UITableView()
         table.isHidden = true
         table.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.identifier)
@@ -129,6 +129,12 @@ class ConversationsViewController: UIViewController {
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: false) // переход на экран логина
             print("change")
+        }
+        else {
+            conversations.removeAll()
+            setupTableView()
+            fetchConversations()
+            startListeningForConversation()
         }
     }
     

@@ -49,6 +49,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0 {
             do {
                 try FirebaseAuth.Auth.auth().signOut()
+                UserDefaults.standard.removeObject(forKey: "name")
                 let vc = StartViewController()
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen

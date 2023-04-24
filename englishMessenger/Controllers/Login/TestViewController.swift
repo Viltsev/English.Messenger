@@ -9,9 +9,6 @@ import UIKit
 import Alamofire
 
 class TestViewController: UIViewController {
-//    func sendMessage(message: String) {
-//        field.text = message
-//    }
-
+    
 }
 

@@ -211,7 +211,9 @@ class LoginViewController: UIViewController {
             })
             
             UserDefaults.standard.set(email, forKey: "email")
-           
+            
+            let vc = ConversationsViewController()
+            vc.viewDidLoad()
             
 //            strongSelf.succesfullLogin()
             print("Logged in User: \(user)")

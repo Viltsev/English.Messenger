@@ -12,6 +12,11 @@ import FirebaseDatabase
 //    func getUserLevel(level: String)
 //}
 
+struct UserData {
+    public var email: String
+    public var name: String
+}
+
 final class DatabaseManager {
 //    var delegate: GetLevel?
     static let shared = DatabaseManager()
@@ -539,7 +544,7 @@ extension DatabaseManager {
                         }
                         
                         
-                        // обновление latest message для собеседника (здесь не работает)
+                        // обновление latest message для собеседника
                         
                         strongSelf.database.child("\(otherUserEmail)/conversations").observeSingleEvent(of: .value, with: { snapshot in
                             guard var otherUserConversations = snapshot.value as? [[String: Any]] else {
@@ -547,11 +552,18 @@ extension DatabaseManager {
                                 return
                             }
 
+                            
+                            guard let currentName = UserDefaults.standard.value(forKey: "name") as? String else {
+                                return
+                            }
+                            
+                            print("sender name: \(currentName)")
+                            
                             let updatedValue: [String: Any] = [
                                 "date": dateString,
                                 "is_read": false,
                                 "message": message,
-                                "name": name
+                                "name": currentName
                             ]
 
                             var targetConversation: [String: Any]?
