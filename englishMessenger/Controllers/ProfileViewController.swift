@@ -11,8 +11,9 @@ import FirebaseAuth
 class ProfileViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    let data = ["Выйти", "Определение уровня языка", "Мои интересы",
-                "Грамматический словарь", "Лексический словарь", "Training"]
+    
+    // ячейки таблицы профиля
+    let data = ["Выйти", "Определение уровня языка", "Переводчик", "Тренировка", "Порождение потока", "InvokeAll", "Scheduled Executor"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,11 +25,14 @@ class ProfileViewController: UIViewController {
     }
 }
 
+// MARK: extension для ProfileViewController
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
+    // количество ячеек таблицы
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
     
+    // вывод данных в ячейки таблицы
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = data[indexPath.row]
@@ -43,6 +47,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    // переход на соответствующий экран при нажатии на соот-ую ячейку таблицы
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -67,8 +72,36 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
             present(nav, animated: true)
         }
         
+        if indexPath.row == 2 {
+            let vc = TranslatorViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true)
+        }
+        
+        if indexPath.row == 3 {
+            let vc = DescribeImageViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true)
+        }
+        
+        if indexPath.row == 4 {
+            let vc = MultithreadingViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true)
+        }
+        
         if indexPath.row == 5 {
-            let vc = TrainingViewController()
+            let vc = SecondThreadViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true)
+        }
+        
+        if indexPath.row == 6 {
+            let vc = ThirdThreadViewController()
             let nav = UINavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: true)

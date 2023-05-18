@@ -8,6 +8,8 @@
 import UIKit
 import SDWebImage
 
+// MARK: класс ячейки таблицы диалогов
+// в данном классе находится UI-ячейки таблицы диалогов
 class ConversationTableViewCell: UITableViewCell {
 
     static let identifier = "ConversationTableViewCell"

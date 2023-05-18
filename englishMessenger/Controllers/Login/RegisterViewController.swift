@@ -8,10 +8,15 @@
 import UIKit
 import FirebaseAuth
 import JGProgressHUD
-class RegisterViewController: UIViewController {
 
+class RegisterViewController: UIViewController {
+    
+    // MARK: UI-элементы
+    
+    //  spinner, который отображается при ожидании регистрации
     private let spinner = JGProgressHUD(style: .dark)
     
+    // title Registration
     private let titleLabel: UILabel = {
        let title = UILabel()
         title.text = "Registration"
@@ -29,6 +34,7 @@ class RegisterViewController: UIViewController {
         return imageView
     }()
     
+    // scroll view
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.clipsToBounds = true
@@ -36,6 +42,7 @@ class RegisterViewController: UIViewController {
         return scrollView
     }()
     
+    // emailField
     private let emailField: UITextField = {
         let field = UITextField()
         field.autocapitalizationType = .none
@@ -56,6 +63,7 @@ class RegisterViewController: UIViewController {
         return field
     }()
     
+    // firstNameField
     private let firstNameField: UITextField = {
         let field = UITextField()
         field.autocapitalizationType = .none
@@ -76,6 +84,7 @@ class RegisterViewController: UIViewController {
         return field
     }()
     
+    // lastNameField
     private let lastNameField: UITextField = {
         let field = UITextField()
         field.autocapitalizationType = .none
@@ -96,6 +105,7 @@ class RegisterViewController: UIViewController {
         return field
     }()
     
+    // passwordField
     private let passwordField: UITextField = {
         let field = UITextField()
         field.autocapitalizationType = .none
@@ -117,7 +127,7 @@ class RegisterViewController: UIViewController {
         return field
     }()
     
-    
+    // registerButton
     private let registerButton: UIButton = {
         let button = UIButton()
         button.setTitle("Register", for: .normal)
@@ -136,13 +146,14 @@ class RegisterViewController: UIViewController {
         let navigationBar = self.navigationController?.navigationBar
         navigationBar?.tintColor = .systemPurple
         
+        // добавление функции registerButtonTapped к кнопке регистрации
         registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         
         emailField.delegate = self
         passwordField.delegate = self
         
         // add subviews
-//        view.addSubview(imageView)
+        // view.addSubview(imageView)
         view.addSubview(titleLabel)
         view.addSubview(scrollView)
         scrollView.addSubview(emailField)
@@ -205,7 +216,12 @@ class RegisterViewController: UIViewController {
         print("Changed")
     }
     
+    // MARK: функция регистрации
     @objc private func registerButtonTapped() {
+        
+        // скрываем клавиатуры из emailField, passwordField,
+        // firstNameField и lastNameField
+        // с помощью метода resignFirstResponder()
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
         firstNameField.resignFirstResponder()
@@ -226,12 +242,14 @@ class RegisterViewController: UIViewController {
                   return
               }
         
-        
+        // запуск спиннера загрузки
         spinner.show(in: view)
         
         // Firebase login
-        
         DatabaseManager.shared.userExists(with: email, completion: { [weak self] exists in
+            
+            // Конструкция guard let strongSelf = self else { return } используется для обеспечения безопасности работы с опциональными значениями в замыканиях или асинхронных операциях, особенно в контексте захвата (capture) self внутри замыкания.
+            // Когда замыкание захватывает self, это может создать цикл сильных ссылок (strong reference cycle) между замыканием и экземпляром класса. Цикл сильных ссылок может привести к утечке памяти, когда экземпляр класса не будет освобождаться из памяти, даже когда он больше не нужен.
             
             guard let strongSelf = self else {
                 return
@@ -247,6 +265,7 @@ class RegisterViewController: UIViewController {
                 return
             }
             
+            // вызов функции создания нового пользователя
             FirebaseAuth.Auth.auth().createUser(withEmail: email,
                                                 password: password,
                                                 completion: { authResult, error in
@@ -256,18 +275,18 @@ class RegisterViewController: UIViewController {
                     return
                 }
                 
+                // создаем нового пользователя по структуре AppUser
                 let chatUser = AppUser(firstName: firstName,
                                        lastName: lastName,
                                        emailAddress: email)
                 
-                DatabaseManager.shared.insertNewUser(with: chatUser, completion: { success in
-                    if success {
-                        // upload image
-                        
-                    }
-                })
+//                DatabaseManager.shared.insertNewUser(with: chatUser, completion: { success in
+//                    if success {
+//                        // upload image
+//
+//                    }
+//                })
                 
-                /// succesful log in
                 // Экран логина дисмисится, возвращаемся в initial view controller
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             })
@@ -286,11 +305,14 @@ class RegisterViewController: UIViewController {
 
 }
 
+// MARK: extension для RegisterViewController
 extension RegisterViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // функция раскрытия клавиатура при нажатии на emailField
         if textField == emailField {
             passwordField.becomeFirstResponder()
         }
+        // или passwordField
         else if textField == passwordField {
             registerButtonTapped()
         }

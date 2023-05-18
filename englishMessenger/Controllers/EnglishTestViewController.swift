@@ -18,18 +18,18 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
     var delegate: Level?
     
     let database = Firestore.firestore()
-    /// текущий ответ
+    // текущий ответ
     var currentAnswer = ""
-    /// номер вопроса
+    // номер вопроса
     var numOfQuesString = ""
     var numOfQues = 1
-    /// выбранный вариант ответа
+    // выбранный вариант ответа
     var selectedButton: Int = 0
-    /// кол-во вопросов
+    // кол-во вопросов
     var questionsAmount = 0
-    /// словарь ответов пользователя
+    // словарь ответов пользователя
     var userAnswers: [String: String] = ["": ""]
-    /// словарь с правильными вариантами ответов
+    // словарь с правильными вариантами ответов
     var rightAnswers: [String: String] = ["": ""]
     
     
@@ -70,6 +70,7 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
+    let progressBar = UIProgressView(progressViewStyle: .default)
     
     private let label: UILabel = {
         let label = UILabel()
@@ -95,6 +96,7 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(answerButtonThird)
         view.addSubview(answerButtonFourth)
         view.addSubview(nextQuestionButton)
+        view.addSubview(progressBar)
         
         answerButtonFirst.addTarget(self, action: #selector(answerButtonFirstClick), for: .touchUpInside)
         answerButtonSecond.addTarget(self, action: #selector(answerButtonSecondClick), for: .touchUpInside)
@@ -105,6 +107,9 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
         field.delegate = self
         title = "Test"
         view.backgroundColor = .white
+        progressBar.progressTintColor = UIColor.purple
+        progressBar.trackTintColor = UIColor.systemPink
+        progressBar.progress = 0.0
         
         getQuestion(quesNum: numOfQues)
     
@@ -112,53 +117,59 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        progressBar.frame = CGRect(x: view.bounds.midX - 150, y: view.safeAreaInsets.top + 50, width: 300, height: 50)
         field.frame = CGRect(x: 10, y: view.safeAreaInsets.top + 10, width: view.frame.size.width-20, height: 50)
         label.frame = CGRect(x: 10, y: view.safeAreaInsets.top + 70, width: view.frame.size.width-20, height: 100)
-        answerButtonFirst.frame = CGRect(x: view.bounds.midX - 125, y: view.safeAreaInsets.top + 200, width: 250, height: 50)
-        answerButtonSecond.frame = CGRect(x: view.bounds.midX - 125, y: answerButtonFirst.bottom + 20, width: 250, height: 50)
-        answerButtonThird.frame = CGRect(x: view.bounds.midX - 125, y: answerButtonSecond.bottom + 20, width: 250, height: 50)
-        answerButtonFourth.frame = CGRect(x: view.bounds.midX - 125, y: answerButtonThird.bottom + 20, width: 250, height: 50)
-        nextQuestionButton.frame = CGRect(x: view.bounds.midX - 125, y: answerButtonFourth.bottom + 60, width: 250, height: 50)
+        answerButtonFirst.frame = CGRect(x: view.bounds.midX - 150, y: view.safeAreaInsets.top + 200, width: 300, height: 75)
+        answerButtonSecond.frame = CGRect(x: view.bounds.midX - 150, y: answerButtonFirst.bottom + 20, width: 300, height: 75)
+        answerButtonThird.frame = CGRect(x: view.bounds.midX - 150, y: answerButtonSecond.bottom + 20, width: 300, height: 75)
+        answerButtonFourth.frame = CGRect(x: view.bounds.midX - 150, y: answerButtonThird.bottom + 20, width: 300, height: 75)
+        nextQuestionButton.frame = CGRect(x: view.bounds.midX - 150, y: answerButtonFourth.bottom + 60, width: 300, height: 75)
     }
     
     // MARK: функция записи данных в Firestore
     // text - ответ пользователя
     // quesNum - номер вопроса
     func saveData(text: String, quesNum: Int) {
-        /// получаем из UserDefaults почту текущего пользователя
+        // получаем из UserDefaults почту текущего пользователя
         let currentEmail = UserDefaults.standard.value(forKey: "email") as! String
-        /// записываем данные для конкретного пользователя
+        // записываем данные для конкретного пользователя
         let docRef = database.document("englishTest/\(currentEmail)")
         docRef.setData(["Question \(quesNum)": text], merge: true)
     }
     
     // MARK: функция получения данных из Firestore
     func getQuestion(quesNum: Int) {
-        /// получаем доступ к документу в Firestore по заданному пути
+        // получаем доступ к документу в Firestore по заданному пути
         let docRef = database.document("englishTest/questions")
-        /// с помощью addSnapshotListener считываем данные из БД
+        
+        // с помощью addSnapshotListener считываем данные из БД
         docRef.addSnapshotListener { [weak self] snapshot, error in
             guard let data = snapshot?.data(), error == nil else {
                 return
             }
             
-            /// кол-во вопросов в БД
+            // кол-во вопросов в БД
             self?.questionsAmount = data.count
             
-            /// получаем из data вопрос с переданным в функцию номером вопроса
+            // получаем из data вопрос с переданным в функцию номером вопроса
             guard let text = data["Question \(quesNum)"] as? [String: Any] else {
                     return
             }
             
             self?.numOfQuesString = "Question \(quesNum)"
             
-            /// записываем данные полученные в text в соответствующие элементы для дальнейшего отображения
+            // записываем данные полученные в text в соответствующие элементы для дальнейшего отображения
             DispatchQueue.main.async {
                 self?.label.text = text["question"] as? String
                 self?.answerButtonFirst.setTitle(text["answer1"] as? String, for: .normal)
                 self?.answerButtonSecond.setTitle(text["answer2"] as? String, for: .normal)
                 self?.answerButtonThird.setTitle(text["answer3"] as? String, for: .normal)
                 self?.answerButtonFourth.setTitle(text["answer4"] as? String, for: .normal)
+                self?.answerButtonFirst.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+                self?.answerButtonSecond.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+                self?.answerButtonThird.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+                self?.answerButtonFourth.titleLabel?.font = UIFont.systemFont(ofSize: 12)
                 self?.rightAnswers["Question \(quesNum)"] = text["rightAnswer"] as? String
             }
         }
@@ -207,12 +218,12 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: функция перехода к следующему вопросу
     @objc func nextQuestionButtonClick() {
-        /// сохраняем полученный ответ пользователя на вопрос в Firestore
+        // сохраняем полученный ответ пользователя на вопрос в Firestore
         saveData(text: self.currentAnswer, quesNum: self.numOfQues)
         self.numOfQues += 1
-        /// получаем следующий вопрос
+        // получаем следующий вопрос
         getQuestion(quesNum: numOfQues)
-        /// обновляем кнопки вариантов ответа
+        // обновляем кнопки вариантов ответа
         switch selectedButton {
         case 1:
             answerButtonFirst.backgroundColor = .systemPink
@@ -227,8 +238,10 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
         default:
             break
         }
+        // обновляем значение progress bar
+        progressBar.progress += 0.017
         
-        /// если все вопросы закончились, тогда передаем полученные данные в TestResultsVC
+        // если все вопросы закончились, тогда передаем полученные данные в TestResultsVC
         if self.numOfQues > self.questionsAmount {
             let points = getPoints()
             delegate?.sendPoints(amount: points)

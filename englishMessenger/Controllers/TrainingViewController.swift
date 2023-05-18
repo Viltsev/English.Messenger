@@ -8,8 +8,9 @@
 import UIKit
 import Alamofire
 
-// MARK: structures for get data from JSON
-// MARK: - Welcome
+// MARK: структуры данных из JSON
+
+// MARK: - родительская структура
 struct Welcome: Codable {
     let software: Software
     let language: Language
@@ -77,10 +78,13 @@ struct Software: Codable {
 
 class TrainingViewController: UIViewController, UITextFieldDelegate {
     
-    /// словарь для хранения сообщений о грамматических ошибках
+    // словарь для хранения сообщений о грамматических ошибках
     var grammarMistakeMessages: [Int: String] = [-1: ""]
-    /// словарь для хранения сообщений о том, как можно исправить грамматическую ошибку
+    
+    // словарь для хранения сообщений о том, как можно исправить грамматическую ошибку
     var grammarMistakeReplacements: [Int: String] = [-1: ""]
+    
+    // MARK: UI-элементы
     
     private let buttonSend: UIButton = {
         let button = UIButton()
@@ -113,10 +117,9 @@ class TrainingViewController: UIViewController, UITextFieldDelegate {
         button.tintColor = .systemPink
         navigationItem.leftBarButtonItem = button
         
+        // добавление функции sendButtonTapped к кнопке отправки текста
         buttonSend.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         
-//        textField.delegate = self
-//        textField.placeholder = "Enter text"
         textField.returnKeyType = .done
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(textViewTapped(_:)))
         textField.addGestureRecognizer(tapGesture)

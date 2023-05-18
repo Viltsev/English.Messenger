@@ -50,9 +50,20 @@ class TestResultsViewController: UIViewController, Level {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let levelTitle = UserDefaults.standard.value(forKey: "englishLevel") as? String
-        if levelTitle != nil {
-            resultLabel.text = levelTitle
+        
+        guard let currentUser = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        let safeCurrentUser = DatabaseManager.safeEmail(emailAddress: currentUser)
+        print(safeCurrentUser)
+        
+        DatabaseManager.shared.getLevel(for: "\(safeCurrentUser)") { (level, error) in
+            guard let userLevel = level, error == nil else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.resultLabel.text = userLevel
+            }
         }
         
         resultLabel.frame = CGRect(x: 10, y: view.safeAreaInsets.top + 70, width: view.frame.size.width-20, height: 100)
@@ -61,26 +72,30 @@ class TestResultsViewController: UIViewController, Level {
     
     // MARK: функция получения баллов, набранных за тест
     func sendPoints(amount: Int) {
-        /// передаем полученное из sendPoints кол-во баллов в checkLevel
+        // передаем полученное из sendPoints кол-во баллов в checkLevel
         checkLevel(points: amount)
         let vc = DatabaseManager()
-        /// обновляем в FirebaseDatabase уровень владения пользователя
+        // обновляем в FirebaseDatabase уровень владения пользователя
         vc.updateLevel()
-        /// отображаем уровень владения языком в resultLabel
+        // отображаем уровень владения языком в resultLabel
         resultLabel.text = UserDefaults.standard.value(forKey: "englishLevel") as? String
     }
     
     // MARK: функция определения уровня владения языком
     func checkLevel(points: Int) {
         switch points {
-        case 0:
+        case 0...15:
             UserDefaults.standard.set("Begginer", forKey: "englishLevel")
-        case 1:
+        case 16...29:
             UserDefaults.standard.set("A1", forKey: "englishLevel")
-        case 2:
+        case 30...40:
             UserDefaults.standard.set("A2", forKey: "englishLevel")
-        case 3:
+        case 41...54:
             UserDefaults.standard.set("B1", forKey: "englishLevel")
+        case 55...59:
+            UserDefaults.standard.set("B2", forKey: "englishLevel")
+        case 60:
+            UserDefaults.standard.set("C1", forKey: "englishLevel")
         default:
             UserDefaults.standard.set("Level is not defined!", forKey: "englishLevel")
         }

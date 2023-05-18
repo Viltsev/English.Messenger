@@ -11,19 +11,18 @@ import InputBarAccessoryView
 import Foundation
 import Alamofire
 
-
+// MARK: протокол SendMessage для отправки сообщения пользователю
 protocol SendMessage {
     func sendMessage(message: String)
 }
 
+// MARK: структура сообщения пользователя
 struct Message: MessageType {
     public var sender: SenderType
     public var messageId: String
     public var sentDate: Date
     public var kind: MessageKind
-    
 }
-
 
 extension MessageKind {
     var messageKindString: String {
@@ -53,20 +52,24 @@ extension MessageKind {
     }
 }
 
+// MARK: структура пользователя-отправителя сообщения
 struct Sender: SenderType {
     public var photoURL: String
     public var senderId: String
     public var displayName: String
-    
 }
 
 
 class ChatViewController: MessagesViewController {
     
+    // текст сообщения пользователя
     var userMessage: String = ""
+    // проверка, отправлено сообщение или нет
     var checkSend: Bool = false
+    // делегат протокола SendMessage
     var delegate: SendMessage?
     
+    // дата в сообщении (на данный момент не используется)
     public static let dateFormatter: DateFormatter = {
         let format = DateFormatter()
         format.dateStyle = .full
@@ -76,12 +79,19 @@ class ChatViewController: MessagesViewController {
         return format
     }()
     
+    // email пользователя-получателя сообщения
     public var otherUserEmail: String
+    
+    // id диалога
     private var conversationID: String?
-
+    
+    // проверка, новый ли это диалог или нет
     public var isNewConversation = false
+    
+    // массив сообщений пользователя типа Message
     private var messages = [Message]()
     
+    // экземпляр структуры Sender - пользователь-отправитель сообщения
     private var selfSender: Sender? {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
@@ -118,6 +128,7 @@ class ChatViewController: MessagesViewController {
         messageInputBar.delegate = self
     }
     
+    // MARK: функция перехода в окно с проверкой грамматики сообщения
     @objc func grammarExplain() {
         UserDefaults.standard.set(userMessage, forKey: "userMessage")
         let vc = GrammarChatViewController()
@@ -126,6 +137,7 @@ class ChatViewController: MessagesViewController {
         present(nav, animated: true)
     }
     
+    // MARK: функция получения сообщений из диалога по id диалога
     private func listenForMessages(id: String, shouldScrollToBottom: Bool) {
         DatabaseManager.shared.getAllMessagesForConversation(with: id, completion: { [weak self] result in
             switch result {
@@ -134,16 +146,18 @@ class ChatViewController: MessagesViewController {
                     print("empty")
                     return
                 }
+                
+                // сообщения текущего диалога
                 self?.messages = messages
                 
                 DispatchQueue.main.async {
+                    // обновление сообщений диалога
                     self?.messagesCollectionView.reloadDataAndKeepOffset()
-                    
                     if shouldScrollToBottom {
+                        // скролл на последнее сообщение диалога
                         self?.messagesCollectionView.scrollToLastItem(animated: true)
                     }
                 }
-                
                 
             case .failure(let error):
                 print("failed to get messages: \(error)")
@@ -160,37 +174,43 @@ class ChatViewController: MessagesViewController {
         }
     }
     
-    
+    // MARK: функция кнопки проверки грамматики сообщения
     func configureMessageInputBarCheck() {
         messageInputBar.delegate = self
         messageInputBar.sendButton.title = "Check"
     }
+    
+    // MARK: функция кнопки отправления сообщения
     func configureMessageInputBarSend() {
         messageInputBar.delegate = self
         messageInputBar.sendButton.title = "Send"
     }
 }
 
+// MARK: extension для ChatViewController
 extension ChatViewController: InputBarAccessoryViewDelegate {
     
+    // MARK: функция ввода сообщения в inputBar диалога
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        // считывание данных
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
         let selfSender = self.selfSender,
         let messageID = createMessageId() else {
             return
         }
-        // send message
+        // текст сообщения пользователя
         userMessage = text
-    
         
+        // формирование переменной сообщения типа Message
         let message = Message(sender: selfSender,
                               messageId: messageID,
                               sentDate: Date(),
                               kind: .text(text))
         
         if checkSend {
+            // если диалог новый
             if isNewConversation {
-                // create conversation
+                // создаем новый диалог
                 DatabaseManager.shared.createNewConversation(with: otherUserEmail, name: self.title ?? "User", firstMessage: message, completion: { success in
                     if success {
                         print("message sent")
@@ -205,6 +225,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 guard let conversationID = conversationID, let name = self.title else {
                     return
                 }
+                // отправка сообщения пользователю
                 DatabaseManager.shared.sendMessage(to: conversationID, otherUserEmail: otherUserEmail, name: name, newMessage: message, completion: { success in
                     if success {
                         print("message sent")
@@ -214,6 +235,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                     }
                 })
             }
+            // очищение inputBar диалога
             messageInputBar.inputTextView.text = ""
             configureMessageInputBarCheck()
             checkSend = false
@@ -226,7 +248,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         
     }
     
-    
+    // MARK: функция создания id сообщения 
     private func createMessageId() -> String? {
         guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil

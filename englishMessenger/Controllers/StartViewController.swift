@@ -11,6 +11,9 @@ import FirebaseAuth
 
 class StartViewController: UIViewController {
 
+    // MARK: UI-элементы
+    
+    // titleNewLabel
     private let titleNewLabel: UILabel = {
        let title = UILabel()
         title.text = "English Messenger"
@@ -20,6 +23,7 @@ class StartViewController: UIViewController {
         return title
     }()
     
+    // loginButton
     private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Sign In", for: .normal)
@@ -31,7 +35,7 @@ class StartViewController: UIViewController {
         return button
     }()
     
-    
+    // signInButton
     private let signInButton: UIButton = {
         let button = UIButton()
         button.setTitle("Get Started", for: .normal)
@@ -67,21 +71,15 @@ class StartViewController: UIViewController {
         loginButton.frame = CGRect(x: signInButton.frame.minX, y: signInButton.bottom + 20, width: 250, height: 60)
     }
     
+    // MARK: функция перехода в окно регистрации
     @objc private func registration() {
         let vc = RegisterViewController()
-//        let nav = UINavigationController(rootViewController: vc)
-//        nav.modalPresentationStyle = .fullScreen
-//        present(nav, animated: true) // переход на экран регистрации
-        
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    // MARK: функция перехода в окно логина
     @objc private func signIn() {
         let vc = LoginViewController()
-//        let nav = UINavigationController(rootViewController: vc)
-//        nav.modalPresentationStyle = .fullScreen
-//        present(nav, animated: true) // переход на экран логина
-        
         navigationController?.pushViewController(vc, animated: true)
     }
 

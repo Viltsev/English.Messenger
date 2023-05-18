@@ -8,21 +8,34 @@
 import Foundation
 import FirebaseDatabase
 
-//protocol GetLevel {
-//    func getUserLevel(level: String)
+// MARK: структура данных пользователя
+//struct UserData {
+//    public var email: String
+//    public var name: String
 //}
 
-struct UserData {
-    public var email: String
-    public var name: String
+// MARK: структура данных пользователя
+struct AppUser {
+    let firstName: String
+    let lastName: String
+    let emailAddress: String
+    
+    var safeEmail: String {
+        var safeEmail = emailAddress.replacingOccurrences(of: ".", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+        return safeEmail
+    }
 }
 
+// MARK: класс Firebase Realtime Database
 final class DatabaseManager {
-//    var delegate: GetLevel?
+    // экземпляр класса
     static let shared = DatabaseManager()
     
+    // ссылка на БД
     private let database = Database.database().reference()
-
+    
+    // MARK: функция преобразования email пользователя к нужному для Firebase виду
     static func safeEmail(emailAddress: String) -> String {
         var safeEmail = emailAddress.replacingOccurrences(of: ".", with: "-")
         safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
@@ -31,6 +44,7 @@ final class DatabaseManager {
 }
 
 extension DatabaseManager {
+    // MARK: функция получения данных пользователя по email (path: String)
     public func getDataFor(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
         self.database.child("\(path)").observeSingleEvent(of: .value, with: { snapshot in
             guard let value = snapshot.value else {
@@ -42,10 +56,8 @@ extension DatabaseManager {
     }
 }
 
-
-
-/// Inserting new users
 extension DatabaseManager {
+    // MARK: функция-проверка, существует ли пользователь с таким email или нет
     public func userExists(with email: String, completion: @escaping ((Bool) -> Void)) {
         
         var safeEmail = email.replacingOccurrences(of: ".", with: "-")
@@ -61,16 +73,9 @@ extension DatabaseManager {
         })
     }
     
-    
-//    public func insertNewUser(with user: AppUser, completion: @escaping (Bool) -> Void) {
-//        database.child(user.safeEmail).setValue([
-//            "firstName": user.firstName,
-//            "lastName": user.lastName
-//        ])
-//    }
-    
-    
+    // MARK: функция для записи нового пользователя в БД
     public func insertNewUser(with user: AppUser, completion: @escaping (Bool) -> Void) {
+        // запись пользователя в БД
         database.child(user.safeEmail).setValue([
             "firstName": user.firstName,
             "lastName": user.lastName
@@ -81,7 +86,7 @@ extension DatabaseManager {
                 return
             }
             
-            /// получение данных о пользователе
+            // получение данных о пользователе, записанного в БД
             self.database.child("users").observeSingleEvent(of: .value, with: {snapshot in
                 if var usersCollection = snapshot.value as? [[String: String]] {
                     // добавление пользователя в словарь
@@ -91,6 +96,7 @@ extension DatabaseManager {
                     ]
                     usersCollection.append(newElement)
                     
+                    // в users добавляем словарь usersCollection
                     self.database.child("users").setValue(usersCollection, withCompletionBlock: { error, _ in
                         guard error == nil else {
                             completion(false)
@@ -100,7 +106,7 @@ extension DatabaseManager {
                     
                 }
                 else {
-                    // создание нового словаря
+                    // если пользователя не существует -> создание нового словаря
                     let newCollection: [[String: String]] = [
                         [
                             "name": user.firstName + " " + user.lastName,
@@ -120,7 +126,7 @@ extension DatabaseManager {
         })
     }
     
-    /// функция получения всех существующих пользователей
+    // MARK: функция получения всех существующих пользователей
     public func getAllUsers(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value, with: { snapshot in
             guard let value = snapshot.value as? [[String: String]] else {
@@ -131,7 +137,7 @@ extension DatabaseManager {
         })
     }
     
-    /// перечисление - ошибки базы данных
+    // MARK: перечисление - ошибки базы данных
     public enum DatabaseError: Error {
         case failedToFetch
     }
@@ -140,8 +146,7 @@ extension DatabaseManager {
 
 
 extension DatabaseManager {
-    
-    /// создание нового диалога
+    // MARK: функция создание нового диалога
     public func createNewConversation(with otherUserEmail: String, name: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
         // получение почты текущего пользователя из UserDefaults
         guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String,
@@ -229,14 +234,10 @@ extension DatabaseManager {
                 }
             })
             
-            
-            
-            // Update current user conversation entry
-            
-            
+            // Обновление текущего диалога пользователя
             if var conversations = userNode["conversations"] as? [[String: Any]] {
-                // существует диалог для текущего пользователя
                 
+                // существует диалог для текущего пользователя
                 conversations.append(newConversationData)
                 userNode["conversations"] = conversations
                 ref.setValue(userNode, withCompletionBlock: { [weak self] error, _ in
@@ -274,7 +275,7 @@ extension DatabaseManager {
         })
     }
     
-    /// функция завершения создания диалога
+    // MARK: функция завершения создания диалога
     private func finishCreatingConversation(name: String, conversationID: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
         
         // дата отправления сообщения
@@ -344,7 +345,7 @@ extension DatabaseManager {
         
     }
     
-    /// получение всех диалогов пользователя по email
+    // MARK: функция получение всех диалогов пользователя по email
     public func getAllConversations(for email: String, completion: @escaping (Result<[Conversation], Error>) -> Void) {
         database.child("\(email)/conversations").observe(.value, with: { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
@@ -375,7 +376,7 @@ extension DatabaseManager {
         } )
     }
     
-    /// получение всех сообщений из данного диалога
+    // MARK: получение всех сообщений из данного диалога
     public func getAllMessagesForConversation(with id: String, completion: @escaping (Result<[Message], Error>) -> Void) {
         database.child("\(id)/messages").observe(.value, with: { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
@@ -394,8 +395,6 @@ extension DatabaseManager {
                           print("nil")
                           return nil
                       }
-                    
-                
                 // let date = ChatViewController.dateFormatter.date(from: dateString)
                 
                 let date = Date()
@@ -422,7 +421,62 @@ extension DatabaseManager {
     }
     
     
-    /// отправка сообщений пользователю
+//    public func getLevel(for email: String, completion: @escaping (String?, Error?) -> Void) {
+//        database.child("\(email)/level").observe(.value) { snapshot in
+//            guard let value = snapshot.value as? String else {
+//                completion(.failure(DatabaseError.failedToFetch))
+//                return
+//            }
+//
+//            completion(.success(value))
+//        }
+//    }
+    
+    // MARK: функция получения текущего уровня владения языком пользователя
+    func getLevel(for email: String, completion: @escaping (String?, Error?) -> Void) {
+        database.child("\(email)").child("level").observeSingleEvent(of: .value) { (snapshot, error) in
+            if let level = snapshot.value as? String {
+                completion(level, nil)
+            } else {
+                print("error")
+            }
+        } withCancel: { (error) in
+            completion(nil, error)
+        }
+    }
+    
+//    public func getLevel(for email: String, completion: @escaping (Result<[Conversation], Error>) -> Void) {
+//        database.child("\(email)/conversations").observe(.value, with: { snapshot in
+//            guard let value = snapshot.value as? [[String: Any]] else {
+//                completion(.failure(DatabaseError.failedToFetch))
+//                return
+//            }
+//
+//            let conversations: [Conversation] = value.compactMap({ dictionary in
+//                guard let conversationID = dictionary["id"] as? String,
+//                      let otherUserEmail = dictionary["other_user_email"] as? String,
+//                      let latestMessage = dictionary["latest_message"] as? [String: Any],
+//                      let date = latestMessage["date"] as? String,
+//                      let name = latestMessage["name"] as? String,
+//                      let message = latestMessage["message"] as? String,
+//                      let isRead = latestMessage["is_read"] as? Bool else {
+//                          return nil
+//                      }
+//
+//                let latestMessageObject = LatestMessage(date: date,
+//                                                        text: message,
+//                                                        isRead: isRead)
+//                return Conversation(id: conversationID,
+//                                    name: name,
+//                                    otherUserEmail: otherUserEmail,
+//                                    latestMessage: latestMessageObject)
+//            })
+//            completion(.success(conversations))
+//        } )
+//    }
+    
+    
+    // MARK: функция отправки сообщений пользователю
     public func sendMessage(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, completion: @escaping (Bool) -> Void) {
         // 1. добавление сообщения в messages
         // 2. обновление "latest message" отправителя
@@ -606,14 +660,4 @@ extension DatabaseManager {
 }
 
 
-struct AppUser {
-    let firstName: String
-    let lastName: String
-    let emailAddress: String
-    
-    var safeEmail: String {
-        var safeEmail = emailAddress.replacingOccurrences(of: ".", with: "-")
-        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
-        return safeEmail
-    }
-}
+

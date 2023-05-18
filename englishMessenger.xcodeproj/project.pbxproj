@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		8311525F299F85410001B758 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8311525E299F85410001B758 /* StartViewController.swift */; };
 		83115263299FA49B0001B758 /* NewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83115262299FA49B0001B758 /* NewProfileViewController.swift */; };
+		8319F63C2A0EEC570048072F /* SecondThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8319F63B2A0EEC570048072F /* SecondThreadViewController.swift */; };
+		8319F63E2A0EFF2B0048072F /* ThirdThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8319F63D2A0EFF2B0048072F /* ThirdThreadViewController.swift */; };
+		83347D4E2A05874600B1BE79 /* MultithreadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83347D4D2A05874600B1BE79 /* MultithreadingViewController.swift */; };
 		83546356299D77D4000FCC1B /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83546355299D77D4000FCC1B /* TestViewController.swift */; };
 		835B34D929E0B6A90019C199 /* EnglishTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B34D829E0B6A90019C199 /* EnglishTestViewController.swift */; };
 		835B34DB29E0B6D80019C199 /* TestResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B34DA29E0B6D80019C199 /* TestResultsViewController.swift */; };
@@ -20,6 +23,7 @@
 		8374B8FB29A2402F0047476E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8374B8FA29A2402F0047476E /* ChatViewController.swift */; };
 		8374B8FD29A291030047476E /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8374B8FC29A291030047476E /* StorageManager.swift */; };
 		8376513429AFDD5900FF778B /* Simpleoak-RpP3o.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8376513329AFDD5900FF778B /* Simpleoak-RpP3o.ttf */; };
+		8377352D2A02472000292903 /* DescribeImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8377352C2A02472000292903 /* DescribeImageViewController.swift */; };
 		83919F6E29C5ADDE0058C1D1 /* TrainingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83919F6D29C5ADDE0058C1D1 /* TrainingViewController.swift */; };
 		83939509299E11E40048BB07 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83939508299E11E40048BB07 /* DatabaseManager.swift */; };
 		8395F734299CCEC00038376B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F733299CCEC00038376B /* AppDelegate.swift */; };
@@ -36,6 +40,7 @@
 		8395F759299CD39D0038376B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F758299CD39D0038376B /* ProfileViewController.swift */; };
 		8395F75C299CDA0E0038376B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8395F75B299CDA0E0038376B /* Extensions.swift */; };
 		83990E5329E7F57D00BEC1BD /* GrammarChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83990E5229E7F57D00BEC1BD /* GrammarChatViewController.swift */; };
+		83B428522A14C52E00C4ED34 /* TranslatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B428512A14C52E00C4ED34 /* TranslatorViewController.swift */; };
 		83BCC8B329CDA03400571AA0 /* GrammarMistakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BCC8B129CDA03400571AA0 /* GrammarMistakeViewController.swift */; };
 		83BCC8B429CDA03400571AA0 /* GrammarMistakeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83BCC8B229CDA03400571AA0 /* GrammarMistakeViewController.xib */; };
 		83F043B229AFD50100B2AA85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 83F043B129AFD50100B2AA85 /* GoogleService-Info.plist */; };
@@ -61,12 +66,16 @@
 		1A7C1062F0631DAD738484B2 /* Pods-englishMessenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-englishMessenger.debug.xcconfig"; path = "Target Support Files/Pods-englishMessenger/Pods-englishMessenger.debug.xcconfig"; sourceTree = "<group>"; };
 		8311525E299F85410001B758 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		83115262299FA49B0001B758 /* NewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileViewController.swift; sourceTree = "<group>"; };
+		8319F63B2A0EEC570048072F /* SecondThreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondThreadViewController.swift; sourceTree = "<group>"; };
+		8319F63D2A0EFF2B0048072F /* ThirdThreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdThreadViewController.swift; sourceTree = "<group>"; };
+		83347D4D2A05874600B1BE79 /* MultithreadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultithreadingViewController.swift; sourceTree = "<group>"; };
 		83546355299D77D4000FCC1B /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		835B34D829E0B6A90019C199 /* EnglishTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnglishTestViewController.swift; sourceTree = "<group>"; };
 		835B34DA29E0B6D80019C199 /* TestResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestResultsViewController.swift; sourceTree = "<group>"; };
 		8374B8FA29A2402F0047476E /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		8374B8FC29A291030047476E /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		8376513329AFDD5900FF778B /* Simpleoak-RpP3o.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Simpleoak-RpP3o.ttf"; path = "../../../../../Downloads/Simpleoak/Simpleoak-RpP3o.ttf"; sourceTree = "<group>"; };
+		8377352C2A02472000292903 /* DescribeImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescribeImageViewController.swift; sourceTree = "<group>"; };
 		83919F6D29C5ADDE0058C1D1 /* TrainingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingViewController.swift; sourceTree = "<group>"; };
 		83939508299E11E40048BB07 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		8395F730299CCEC00038376B /* englishMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = englishMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +94,7 @@
 		8395F758299CD39D0038376B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		8395F75B299CDA0E0038376B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		83990E5229E7F57D00BEC1BD /* GrammarChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrammarChatViewController.swift; sourceTree = "<group>"; };
+		83B428512A14C52E00C4ED34 /* TranslatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorViewController.swift; sourceTree = "<group>"; };
 		83BCC8B129CDA03400571AA0 /* GrammarMistakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrammarMistakeViewController.swift; sourceTree = "<group>"; };
 		83BCC8B229CDA03400571AA0 /* GrammarMistakeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GrammarMistakeViewController.xib; sourceTree = "<group>"; };
 		83F043AD29AFD4C700B2AA85 /* Realm.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Realm.xcframework; sourceTree = "<group>"; };
@@ -185,6 +195,11 @@
 				835B34D829E0B6A90019C199 /* EnglishTestViewController.swift */,
 				835B34DA29E0B6D80019C199 /* TestResultsViewController.swift */,
 				83990E5229E7F57D00BEC1BD /* GrammarChatViewController.swift */,
+				8377352C2A02472000292903 /* DescribeImageViewController.swift */,
+				83347D4D2A05874600B1BE79 /* MultithreadingViewController.swift */,
+				8319F63B2A0EEC570048072F /* SecondThreadViewController.swift */,
+				8319F63D2A0EFF2B0048072F /* ThirdThreadViewController.swift */,
+				83B428512A14C52E00C4ED34 /* TranslatorViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -351,6 +366,7 @@
 			files = (
 				83919F6E29C5ADDE0058C1D1 /* TrainingViewController.swift in Sources */,
 				8395F74F299CD2F60038376B /* LoginViewController.swift in Sources */,
+				8319F63E2A0EFF2B0048072F /* ThirdThreadViewController.swift in Sources */,
 				83BCC8B329CDA03400571AA0 /* GrammarMistakeViewController.swift in Sources */,
 				8395F751299CD3300038376B /* RegisterViewController.swift in Sources */,
 				83546356299D77D4000FCC1B /* TestViewController.swift in Sources */,
@@ -362,14 +378,18 @@
 				8395F75C299CDA0E0038376B /* Extensions.swift in Sources */,
 				8311525F299F85410001B758 /* StartViewController.swift in Sources */,
 				8395F734299CCEC00038376B /* AppDelegate.swift in Sources */,
+				83B428522A14C52E00C4ED34 /* TranslatorViewController.swift in Sources */,
 				8395F759299CD39D0038376B /* ProfileViewController.swift in Sources */,
 				8395F736299CCEC00038376B /* SceneDelegate.swift in Sources */,
 				83FF34EA29B3531D004D90CC /* ConversationTableViewCell.swift in Sources */,
+				8319F63C2A0EEC570048072F /* SecondThreadViewController.swift in Sources */,
 				8395F753299CD33E0038376B /* PhotoViewerViewController.swift in Sources */,
+				83347D4E2A05874600B1BE79 /* MultithreadingViewController.swift in Sources */,
 				8374B8FB29A2402F0047476E /* ChatViewController.swift in Sources */,
 				83115263299FA49B0001B758 /* NewProfileViewController.swift in Sources */,
 				8374B8FD29A291030047476E /* StorageManager.swift in Sources */,
 				835B34DB29E0B6D80019C199 /* TestResultsViewController.swift in Sources */,
+				8377352D2A02472000292903 /* DescribeImageViewController.swift in Sources */,
 				835B34D929E0B6A90019C199 /* EnglishTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

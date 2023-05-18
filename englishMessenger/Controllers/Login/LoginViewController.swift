@@ -11,10 +11,12 @@ import JGProgressHUD
 
 class LoginViewController: UIViewController {
 
-    /// spinner
+    // MARK: UI-элементы
+    
+    //  spinner, который отображается при ожидании логина
     private let spinner = JGProgressHUD(style: .dark)
     
-    /// title
+    // title Sign In
     private let titleLabel: UILabel = {
         let title = UILabel()
         title.text = "Sign In"
@@ -24,7 +26,7 @@ class LoginViewController: UIViewController {
         return title
     }()
     
-    /// logo
+    // logo
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "logo")
@@ -32,7 +34,7 @@ class LoginViewController: UIViewController {
         return imageView
     }()
     
-    /// scrollView
+    // scrollView
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.clipsToBounds = true
@@ -40,7 +42,7 @@ class LoginViewController: UIViewController {
         return scrollView
     }()
     
-    /// emailField
+    // emailField
     private let emailField: UITextField = {
         let field = UITextField()
         field.autocapitalizationType = .none
@@ -61,7 +63,7 @@ class LoginViewController: UIViewController {
         return field
     }()
     
-    /// passwordField
+    // passwordField
     private let passwordField: UITextField = {
         let field = UITextField()
         field.autocapitalizationType = .none
@@ -83,16 +85,14 @@ class LoginViewController: UIViewController {
         return field
     }()
     
-    /// loginButton
+    // loginButton
     private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Log In", for: .normal)
         button.backgroundColor = .systemPurple
-//        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "Optima", size: 24)
         button.layer.cornerRadius = 12
         button.layer.masksToBounds = true
-//        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         return button
     }()
     
@@ -101,7 +101,6 @@ class LoginViewController: UIViewController {
         view.backgroundColor = UIColor(named: "darkgreen")
         
         let navigationBar = self.navigationController?.navigationBar
-        
         navigationBar?.tintColor = .systemPurple
 
         // кнопка перехода в окно регистрации
@@ -110,14 +109,14 @@ class LoginViewController: UIViewController {
 //                                                            target: self,
 //                                                            action: #selector(tapRegister))
         
-        /// login button action
+        // добавление функции loginButtonTapped к кнопке логина
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         
         emailField.delegate = self
         passwordField.delegate = self
         
-        /// add subviews
-//        view.addSubview(imageView)
+        
+        // view.addSubview(imageView)
         view.addSubview(titleLabel)
         view.addSubview(scrollView)
         scrollView.addSubview(emailField)
@@ -157,8 +156,11 @@ class LoginViewController: UIViewController {
         
     }
     
-    
+    // MARK: функция логина
     @objc private func loginButtonTapped() {
+        
+        // скрываем клавиатуру из emailField и passwordField
+        // с помощью метода resignFirstResponder()
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
         
@@ -170,13 +172,16 @@ class LoginViewController: UIViewController {
                   return
               }
         
+        // запуск спиннера загрузки
         spinner.show(in: view)
         
         // Firebase login
-        
         FirebaseAuth.Auth.auth().signIn(withEmail: email,
                                         password: password,
                                         completion: { [weak self] authResult, error in
+            
+            // Конструкция guard let strongSelf = self else { return } используется для обеспечения безопасности работы с опциональными значениями в замыканиях или асинхронных операциях, особенно в контексте захвата (capture) self внутри замыкания.
+            // Когда замыкание захватывает self, это может создать цикл сильных ссылок (strong reference cycle) между замыканием и экземпляром класса. Цикл сильных ссылок может привести к утечке памяти, когда экземпляр класса не будет освобождаться из памяти, даже когда он больше не нужен.
             
             guard let strongSelf = self else {
                 return
@@ -195,6 +200,7 @@ class LoginViewController: UIViewController {
             
             let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
             
+            // получение данных для пользователя
             DatabaseManager.shared.getDataFor(path: safeEmail, completion: { result in
                 switch result {
                 case .success(let data):
@@ -212,6 +218,7 @@ class LoginViewController: UIViewController {
             
             UserDefaults.standard.set(email, forKey: "email")
             
+            // переход в окно диалогов пользователя
             let vc = ConversationsViewController()
             vc.viewDidLoad()
             
@@ -244,12 +251,14 @@ class LoginViewController: UIViewController {
 
 }
 
-
+// MARK: extension для LoginViewController
 extension LoginViewController: UITextFieldDelegate {
+    // функция раскрытия клавиатура при нажатии на emailField
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == emailField {
             passwordField.becomeFirstResponder()
         }
+        // или passwordField
         else if textField == passwordField {
             loginButtonTapped()
         }

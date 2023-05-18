@@ -27,7 +27,7 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
     
     // MARK: основные UI-элементы
     // TextView с ошибками
-    private let fieldWrong: UITextView = {
+    public let fieldWrong: UITextView = {
         let field = UITextView()
         field.text = "message here"
         field.layer.borderWidth = 0.5
@@ -103,9 +103,11 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
         let url = "https://api.languagetoolplus.com/v2/check"
         
         // асинхронно вызываем функцию запроса на сервис languagetool
-        DispatchQueue.main.async {
+        let queue = DispatchQueue.global(qos: .utility)
+        queue.async {
             self.makeRequest(url: url, parameters: parameters, text: text)
         }
+        
     }
     
     // MARK: TableView Functions
@@ -135,38 +137,38 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
 
 extension GrammarChatViewController {
     
-    /// функция для вывода сообщения об ошибке
+    // функция для вывода сообщения об ошибке
     func alertGrammarMistake(message: String = "") {
         let alert = UIAlertController(title: "You have a grammar mistake!", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
     
-    /// функция для получения сообщения грамматической ошибки
+    // функция для получения сообщения грамматической ошибки
     private func getMatchMessageMistake(value: Match) -> String {
         let res = value.message
         return res
     }
     
-    /// функция для получения массива типа Replacement из массива типа Match
+    // функция для получения массива типа Replacement из массива типа Match
     private func getMatchArrayOfReplacements(value: Match) -> [Replacement] {
         let res = value.replacements
         return res
     }
     
-    /// функция для получения значения предложенной замены ошибки из массива типа Replacement
+    // функция для получения значения предложенной замены ошибки из массива типа Replacement
     private func getMatchReplace(array: [Replacement]) -> String {
         let res = array[0].value
         return res
     }
     
-    /// позиция слова с ошибкой
+    // позиция слова с ошибкой
     private func getPositionOfWord(value: Match) -> Int {
         let res = value.offset
         return res
     }
     
-    /// длина слова с ошибкой
+    // длина слова с ошибкой
     private func getLengthOfWord(value: Match) -> Int {
         let res = value.length
         return res
@@ -210,32 +212,32 @@ extension GrammarChatViewController {
                 }
                 
                 for mistake in grammarMistakes {
-                    /// сохраняем в массив grammarReplacements данные из grammarMistakes
+                    // сохраняем в массив grammarReplacements данные из grammarMistakes
                     grammarReplacements = self.getMatchArrayOfReplacements(value: mistake)
                     
-                    /// получаем возможное исправление грамматической ошибки
+                    // получаем возможное исправление грамматической ошибки
                     let grammarReplaceMessage = self.getMatchReplace(array: grammarReplacements)
                     print("replace word: \(grammarReplaceMessage)")
                 
-                    /// получение позиции, где была допущена грамматическая ошибка
+                    // получение позиции, где была допущена грамматическая ошибка
                     let position = self.getPositionOfWord(value: mistake)
                     
-                    /// получение длины слова, в котором была допущена грамматическая ошибка
+                    // получение длины слова, в котором была допущена грамматическая ошибка
                     let length = self.getLengthOfWord(value: mistake)
                     
-                    /// получение сообщения о грамматической ошибке
+                    // получение сообщения о грамматической ошибке
                     let grammarMistakeMessage = self.getMatchMessageMistake(value: mistake)
                     
-                    /// заношу полученное сообщение в dictionaries сообщений об ошибках
+                    // заношу полученное сообщение в dictionaries сообщений об ошибках
                     self.grammarMistakeMessages.updateValue(grammarMistakeMessage, forKey: index)
                     self.grammarMistakeReplacements.updateValue(grammarReplaceMessage, forKey: index)
                     
-                    /// выделение цветом грамматической ошибки
+                    // выделение цветом грамматической ошибки
                     let range = NSRange(location: position, length: length)
                     attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor(named: "lightred"), range: range)
                     
                     
-                    /// замена сообщения с ошибками на сообщение без ошибок
+                    // замена сообщения с ошибками на сообщение без ошибок
                     let searchString = (text as NSString).substring(with: range)
                     print(searchString)
                     let replacementString = grammarReplaceMessage
@@ -253,14 +255,16 @@ extension GrammarChatViewController {
                     index += 1
                 }
                 
-                // изменяем сообщения в полях fieldWrong и fieldRight
-                self.fieldWrong.attributedText = attributedString
-                self.fieldWrong.font = UIFont.systemFont(ofSize: 18)
-                self.fieldRight.attributedText = newText
-                self.fieldRight.font = UIFont.systemFont(ofSize: 18)
-                
-                // обновление таблицы с ошибками
-                self.tableView.reloadData()
+                DispatchQueue.main.async {
+                    // изменяем сообщения в полях fieldWrong и fieldRight
+                    self.fieldWrong.attributedText = attributedString
+                    self.fieldWrong.font = UIFont.systemFont(ofSize: 18)
+                    self.fieldRight.attributedText = newText
+                    self.fieldRight.font = UIFont.systemFont(ofSize: 18)
+                    
+                    // обновление таблицы с ошибками
+                    self.tableView.reloadData()
+                }
             }
             catch {
                 print("error in decode json!")

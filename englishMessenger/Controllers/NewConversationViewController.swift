@@ -13,9 +13,6 @@ class NewConversationViewController: UIViewController {
     
     public var completion: (([String: String]) -> (Void))?
     
-    
-    private let spinner = JGProgressHUD(style: .dark)
-    
     /// словарь пользователей
     private var users = [[String: String]]()
     
@@ -24,12 +21,19 @@ class NewConversationViewController: UIViewController {
     
     private var hasFetched = false
     
+    // MARK: UI-элементы
+    
+    // спиннер при загрузке
+    private let spinner = JGProgressHUD(style: .dark)
+    
+    // searchBar
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search for Users..."
         return searchBar
     }()
     
+    // tableView
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.isHidden = true
@@ -37,6 +41,7 @@ class NewConversationViewController: UIViewController {
         return tableView
     }()
     
+    // noResultsLabel
     private let noResultsLabel: UILabel = {
         let label = UILabel()
         label.isHidden = true
@@ -81,20 +86,21 @@ class NewConversationViewController: UIViewController {
 
 }
 
+// MARK: extension для NewConversationViewController
 extension NewConversationViewController: UITableViewDelegate, UITableViewDataSource {
+    // количество найденных пользователей
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return results.count
     }
-    
+    // вывод пользователей в каждую ячейку таблицы
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = results[indexPath.row]["name"]
         return cell
     }
-    
+    // переход в диалог к пользователю при нажатии на ячейку
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        // здесь будет реализация диалога
         let targetUserData = results[indexPath.row]
         dismiss(animated: true, completion: { [weak self] in
             self?.completion?(targetUserData)
@@ -104,25 +110,22 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
 
 
 extension NewConversationViewController: UISearchBarDelegate {
-    
-    /// функция нажатия на кнопку  search в searchBar
+    // MARK: функция нажатия на кнопку search в searchBar
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text, !text.isEmpty, !text.replacingOccurrences(of: " ", with: "").isEmpty else {
             return
         }
         
         searchBar.resignFirstResponder()
-        
-        
         results.removeAll()
         spinner.show(in: view)
         
-        /// функция поиска пользователей
+        // функция поиска пользователей
         self.searchUsers(query: text)
         
     }
     
-    /// функция поиска пользователей
+    // MARK: функция поиска пользователей
     func searchUsers(query: String) {
         // есть ли уже в текущем массиве искомые пользователи из Firebase
         if hasFetched {
@@ -144,7 +147,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         }
     }
     
-    /// функция сортировки найденных пользователей по имени
+    // MARK: функция сортировки найденных пользователей по имени
     func filterUsers(with term: String) {
         guard hasFetched else {
             return
@@ -164,7 +167,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         updateUI()
     }
     
-    /// функция обновления UI
+    // MARK: функция обновления UI
     func updateUI() {
         if results.isEmpty {
             self.noResultsLabel.isHidden = false
