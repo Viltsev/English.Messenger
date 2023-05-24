@@ -118,7 +118,20 @@ class ChatViewController: MessagesViewController {
         super.viewDidLoad()
         configureMessageInputBarCheck()
         view.backgroundColor = .red
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit,
+        
+//        let customButton = UIButton(type: .custom)
+//        customButton.setTitle("Грамматика", for: .normal)
+//        customButton.titleLabel?.font = UIFont(name: "Optima", size: 10)
+//        customButton.titleLabel?.textColor = UIColor(named: "darkPurple")
+//        customButton.addTarget(self, action: #selector(grammarExplain), for: .touchUpInside)
+//
+//        // Создаем UIBarButtonItem с кастомной кнопкой
+//        let customBarButtonItem = UIBarButtonItem(customView: customButton)
+//
+//        // Устанавливаем кастомный UIBarButtonItem как rightBarButtonItem
+//        navigationItem.rightBarButtonItem = customBarButtonItem
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search,
                                                             target: self,
                                                             action: #selector(grammarExplain))
 
@@ -126,6 +139,12 @@ class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
+
+
+        messagesCollectionView.backgroundColor = UIColor(named: "cellColor")
+        
+        
+        messageInputBar.sendButton.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
     }
     
     // MARK: функция перехода в окно с проверкой грамматики сообщения

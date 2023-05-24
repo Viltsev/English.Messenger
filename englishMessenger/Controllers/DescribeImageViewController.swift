@@ -29,19 +29,11 @@ class DescribeImageViewController: UIViewController {
     // спиннер для загрузки
     private let spinner = JGProgressHUD(style: .dark)
     
-    // MARK: UI-элементы
-    public let taskLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont(name: "System" , size: 20)
-        label.text = "Опишите картинку"
-        label.textColor = .black
-        return label
-    }()
-    
     public var image: UIImageView = {
         let image = UIImageView()
-        image.backgroundColor = .orange
-        image.layer.cornerRadius = 10
+        image.backgroundColor = UIColor(named: "cellColor")
+        image.layer.cornerRadius = 20
+        image.clipsToBounds = true
         return image
     }()
     
@@ -49,31 +41,30 @@ class DescribeImageViewController: UIViewController {
         let text = UITextView()
         text.font = UIFont.systemFont(ofSize: 18)
         text.layer.borderWidth = 0.5
-        text.layer.borderColor = UIColor.black.cgColor
+        text.layer.cornerRadius = 20
+        text.layer.borderColor = UIColor(named: "darkPurple")?.cgColor
         return text
     }()
     
     private let button: UIButton = {
         let button = UIButton()
-        button.setTitle("Проверка", for: .normal)
-        button.backgroundColor = .systemPurple
+        button.setTitle("Проверить текст", for: .normal)
+        button.backgroundColor = UIColor(named: "darkPurple")
         button.titleLabel?.font = UIFont(name: "Optima", size: 18)
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = 15
         
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-  
-        view.addSubview(taskLabel)
+        view.backgroundColor = UIColor(named: "cellColor")
         view.addSubview(image)
         view.addSubview(textField)
         view.addSubview(button)
         
-        let button = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(buttonTapped))
-        button.tintColor = .systemPink
+        let button = UIBarButtonItem(title: "Назад", style: .done, target: self, action: #selector(buttonTapped))
+        button.tintColor = UIColor(named: "darkPurple")
         navigationItem.leftBarButtonItem = button
         
         // добавляем в кнопке button функцию grammarExplain
@@ -92,10 +83,13 @@ class DescribeImageViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        taskLabel.frame = CGRect(x: view.frame.size.width / 2 - 75, y: view.safeAreaInsets.top + 10, width: 150, height: 20)
-        image.frame = CGRect(x: view.frame.size.width / 2 - 200, y: taskLabel.bottom + 20, width: 400, height: 300)
-        textField.frame = CGRect(x: view.frame.size.width / 2 - 200, y: image.bottom + 20, width: 400, height: 300)
-        button.frame = CGRect(x: view.frame.size.width / 2 - 100, y: textField.bottom + 20, width: 200, height: 50)
+        
+        let messageFieldWidth = view.frame.size.width - 20
+        
+        image.frame = CGRect(x: view.frame.size.width / 2 - messageFieldWidth / 2, y: view.safeAreaInsets.top + 10, width: messageFieldWidth, height: 300)
+        textField.frame = CGRect(x: view.frame.size.width / 2 - messageFieldWidth / 2, y: image.bottom + 20, width: messageFieldWidth, height: 200)
+        button.frame = CGRect(x: view.frame.size.width / 2 - 150, y: textField.bottom + 20, width: 300, height: 100)
+        
     }
     
     @objc private func buttonTapped() {
@@ -109,6 +103,17 @@ class DescribeImageViewController: UIViewController {
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen
         present(nav, animated: true)
+    }
+    
+    // Вызывается при нажатии кнопки Return на клавиатуре
+    func textViewShouldReturn(_ textView: UITextView) -> Bool {
+        textView.resignFirstResponder() // Убрать клавиатуру
+        return true
+    }
+
+    // Вызывается при касании вне текстового поля
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true) // Убрать клавиатуру
     }
 
 }

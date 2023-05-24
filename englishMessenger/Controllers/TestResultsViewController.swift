@@ -19,32 +19,46 @@ class TestResultsViewController: UIViewController, Level {
     // MARK: основные UI-элементы
     var resultLabel: UILabel = {
         let label = UILabel()
+        label.font = .systemFont(ofSize: 40)
+        label.textColor = UIColor(named: "darkPurple")
+        label.text = "Текущий уровень: "
         label.textAlignment = .center
         label.numberOfLines = 5
         return label
     }()
     
+    var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "pandaQuestion")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     private let startTestButton: UIButton = {
         let button = UIButton()
         button.setTitle("Проверить уровень", for: .normal)
-        button.backgroundColor = .systemPink
+        button.titleLabel?.font = .systemFont(ofSize: 20)
+        button.backgroundColor = UIColor(named: "darkPurple")
         button.layer.cornerRadius = 15
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        title = "Test Results"
+        view.backgroundColor = UIColor(named: "cellColor")
         
-        let button = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(buttonTapped))
-        button.tintColor = .systemPink
+        let button = UIBarButtonItem(title: "Назад", style: .done, target: self, action: #selector(buttonTapped))
+        button.tintColor = UIColor(named: "darkPurple")
         navigationItem.leftBarButtonItem = button
         
         view.addSubview(resultLabel)
         view.addSubview(startTestButton)
+        view.addSubview(imageView)
         startTestButton.addTarget(self, action: #selector(startTestButtonAction), for: .touchUpInside)
         
+        
+        
+
         
     }
     
@@ -62,12 +76,13 @@ class TestResultsViewController: UIViewController, Level {
                 return
             }
             DispatchQueue.main.async {
-                self.resultLabel.text = userLevel
+                self.resultLabel.text = "Текущий уровень: \(userLevel)"
             }
         }
         
-        resultLabel.frame = CGRect(x: 10, y: view.safeAreaInsets.top + 70, width: view.frame.size.width-20, height: 100)
-        startTestButton.frame = CGRect(x: view.bounds.midX - 125, y: view.safeAreaInsets.top + 200, width: 250, height: 50)
+        imageView.frame = CGRect(x: view.frame.midX - 150, y: view.frame.minY + 100, width: 300, height: 300)
+        resultLabel.frame = CGRect(x: 10, y: imageView.bottom + 20, width: view.frame.size.width-20, height: 100)
+        startTestButton.frame = CGRect(x: view.bounds.midX - 150, y: resultLabel.bottom + 30, width: 300, height: 100)
     }
     
     // MARK: функция получения баллов, набранных за тест
@@ -78,7 +93,7 @@ class TestResultsViewController: UIViewController, Level {
         // обновляем в FirebaseDatabase уровень владения пользователя
         vc.updateLevel()
         // отображаем уровень владения языком в resultLabel
-        resultLabel.text = UserDefaults.standard.value(forKey: "englishLevel") as? String
+        resultLabel.text = "Текущий уровень: \(String(describing: UserDefaults.standard.value(forKey: "englishLevel") as? String))"
     }
     
     // MARK: функция определения уровня владения языком

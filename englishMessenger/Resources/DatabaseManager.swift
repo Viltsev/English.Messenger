@@ -137,6 +137,20 @@ extension DatabaseManager {
         })
     }
     
+    // MARK: функция получения имени и фамилии текущего пользователя
+    public func getUserName(email: String, completion: @escaping (Result<[[String: String]], Error>) -> Void) {
+        var safeEmail = email.replacingOccurrences(of: ".", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+        
+        database.child("\(safeEmail)").observeSingleEvent(of: .value, with: { snapshot in
+            guard let value = snapshot.value as? [[String: String]] else {
+                completion(.failure(DatabaseError.failedToFetch))
+                return
+            }
+            completion(.success(value))
+        })
+    }
+    
     // MARK: перечисление - ошибки базы данных
     public enum DatabaseError: Error {
         case failedToFetch

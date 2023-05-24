@@ -32,7 +32,7 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
         field.text = "message here"
         field.layer.borderWidth = 0.5
         field.layer.cornerRadius = 15
-        field.layer.borderColor = UIColor.systemPink.cgColor
+        field.layer.borderColor = UIColor(named: "darkPurple")?.cgColor
         field.sizeToFit()
         return field
     }()
@@ -42,7 +42,7 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
         field.text = "right message"
         field.layer.borderWidth = 0.5
         field.layer.cornerRadius = 15
-        field.layer.borderColor = UIColor.green.cgColor
+        field.layer.borderColor = UIColor(named: "darkPurple")?.cgColor
         field.sizeToFit()
         return field
     }()
@@ -50,8 +50,8 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Grammar Mistakes"
-        view.backgroundColor = .white
+        
+        view.backgroundColor = UIColor(named: "cellColor")
         
         // добавление UI-элементов на экран
         view.addSubview(fieldWrong)
@@ -59,8 +59,8 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
         view.addSubview(tableView)
         
         // кнопка для возврата на предыдущий экран
-        let button = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(buttonTapped))
-        button.tintColor = .systemPink
+        let button = UIBarButtonItem(title: "Назад", style: .done, target: self, action: #selector(buttonTapped))
+        button.tintColor = UIColor(named: "darkPurple")
         navigationItem.leftBarButtonItem = button
         
         fieldWrong.dataDetectorTypes = UIDataDetectorTypes.all
@@ -72,6 +72,8 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = UIColor(named: "cellColor")
+        tableView.rowHeight = 60
         
         // вызов функции проверки на грамматические ошибки
         checkGrammar()
@@ -111,22 +113,43 @@ class GrammarChatViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     // MARK: TableView Functions
+    func numberOfSections(in tableView: UITableView) -> Int {
+       // Указываем количество секций равным количеству ячеек
+       return mistakesArray.count
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return mistakesArray.count
+       // Возвращаем 1 для каждой секции
+       return 1
     }
         
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-        cell.textLabel?.text = mistakesArray[indexPath.row]
+        cell.textLabel?.text = mistakesArray[indexPath.section]
+        cell.backgroundColor = UIColor(named: "profileBackground")
+        cell.layer.cornerRadius = 20
+        cell.textLabel?.textColor = UIColor(named: "darkPurple")
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 2.0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        headerView.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 0) // Задайте нужную высоту отступа
+
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         // получаем для соответствующей ячейки таблицы ошибку и замену
-        let message = grammarMistakeMessages[indexPath.row]
-        let replacement = grammarMistakeReplacements[indexPath.row]
+        let message = grammarMistakeMessages[indexPath.section]
+        let replacement = grammarMistakeReplacements[indexPath.section]
         
         // вызываем функцию с описанием ошибки и её предложенным исправлением
         showGrammarMistake(mistake: message!, replacement: replacement!)
@@ -178,7 +201,7 @@ extension GrammarChatViewController {
         let popupVC = GrammarMistakeViewController()
         
         popupVC.grammarMistakeDescription.text = "Грамматическая ошибка: \n \(mistake)"
-        popupVC.grammarReplaceLabel.text = "Возможная замена \n \(replacement)"
+        popupVC.grammarReplaceLabel.text = "Возможная замена: \n \(replacement)"
         popupVC.modalPresentationStyle = .popover
         present(popupVC, animated: true)
     }
@@ -246,7 +269,7 @@ extension GrammarChatViewController {
                     let newRangeColor = NSRange(location: position + rangeDifference, length: newLength)
                     
                     newText.mutableString.replaceOccurrences(of: searchString, with: replacementString, range: newRange)
-                    newText.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.green, range: newRangeColor)
+                    newText.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor(named: "greenColor"), range: newRangeColor)
                     
                     rangeDifference += newLength - length
                     

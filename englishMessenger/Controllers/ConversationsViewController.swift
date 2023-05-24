@@ -59,11 +59,12 @@ class ConversationsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "darkgreen")
         
         // navigation bar
         let navigationBar = self.navigationController?.navigationBar
-        navigationBar?.tintColor = .systemPurple
+        navigationBar?.tintColor = UIColor(named: "darkPurple")
+        
+        
         
         // right navbar item - переход в окно поиска диалога
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose,
@@ -71,12 +72,15 @@ class ConversationsViewController: UIViewController {
                                                             action: #selector(didTapComposeButton))
         
         // left navbar item - переход в случайный диалог
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play,
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search,
                                                            target: self,
                                                            action: #selector(goToRandomDialog))
         
+        
         view.addSubview(tableView)
         view.addSubview(noConversationsLabel)
+        tableView.backgroundColor = UIColor(named: "cellColor")
+        tableView.separatorStyle = .none
         
         setupTableView()
         fetchConversations()
@@ -254,6 +258,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = conversations[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier, for: indexPath) as! ConversationTableViewCell
+        cell.backgroundColor = UIColor(named: "cellColor")
         cell.configure(with: model)
         return cell
     }

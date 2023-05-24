@@ -36,28 +36,32 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
     // MARK: основные UI-элементы
     private let answerButtonFirst: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .systemPink
+        button.backgroundColor = UIColor(named: "profileBackground")
+        button.titleLabel?.textColor = .black
         button.layer.cornerRadius = 15
         return button
     }()
     
     private let answerButtonSecond: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .systemPink
+        button.backgroundColor = UIColor(named: "profileBackground")
+        button.titleLabel?.textColor = .black
         button.layer.cornerRadius = 15
         return button
     }()
     
     private let answerButtonThird: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .systemPink
+        button.backgroundColor = UIColor(named: "profileBackground")
+        button.titleLabel?.textColor = .black
         button.layer.cornerRadius = 15
         return button
     }()
     
     private let answerButtonFourth: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .systemPink
+        button.backgroundColor = UIColor(named: "profileBackground")
+        button.titleLabel?.textColor = .black
         button.layer.cornerRadius = 15
         return button
     }()
@@ -65,7 +69,7 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
     private let nextQuestionButton: UIButton = {
         let button = UIButton()
         button.setTitle("Next Question", for: .normal)
-        button.backgroundColor = UIColor(named: "darkgreen")
+        button.backgroundColor = UIColor(named: "darkPurple")
         button.layer.cornerRadius = 15
         return button
     }()
@@ -90,6 +94,10 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = UIColor(named: "cellColor")
+        
+        
         view.addSubview(label)
         view.addSubview(answerButtonFirst)
         view.addSubview(answerButtonSecond)
@@ -104,11 +112,16 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
         answerButtonFourth.addTarget(self, action: #selector(answerButtonFourthClick), for: .touchUpInside)
         nextQuestionButton.addTarget(self, action: #selector(nextQuestionButtonClick), for: .touchUpInside)
         
+        
+        let button = UIBarButtonItem(title: "Назад", style: .done, target: self, action: #selector(buttonTapped))
+        button.tintColor = UIColor(named: "darkPurple")
+        navigationItem.leftBarButtonItem = button
+        
         field.delegate = self
-        title = "Test"
+        
         view.backgroundColor = .white
-        progressBar.progressTintColor = UIColor.purple
-        progressBar.trackTintColor = UIColor.systemPink
+        progressBar.progressTintColor = UIColor(named: "darkPurple")
+        progressBar.trackTintColor = UIColor(named: "profileBackground")
         progressBar.progress = 0.0
         
         getQuestion(quesNum: numOfQues)
@@ -125,6 +138,10 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
         answerButtonThird.frame = CGRect(x: view.bounds.midX - 150, y: answerButtonSecond.bottom + 20, width: 300, height: 75)
         answerButtonFourth.frame = CGRect(x: view.bounds.midX - 150, y: answerButtonThird.bottom + 20, width: 300, height: 75)
         nextQuestionButton.frame = CGRect(x: view.bounds.midX - 150, y: answerButtonFourth.bottom + 60, width: 300, height: 75)
+    }
+    
+    @objc private func buttonTapped() {
+       dismiss(animated: true, completion: nil)
     }
     
     // MARK: функция записи данных в Firestore
@@ -170,6 +187,12 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
                 self?.answerButtonSecond.titleLabel?.font = UIFont.systemFont(ofSize: 12)
                 self?.answerButtonThird.titleLabel?.font = UIFont.systemFont(ofSize: 12)
                 self?.answerButtonFourth.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+                
+                self?.answerButtonFirst.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+                self?.answerButtonSecond.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+                self?.answerButtonThird.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+                self?.answerButtonFourth.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+                self?.label.textColor = UIColor(named: "darkPurple")
                 self?.rightAnswers["Question \(quesNum)"] = text["rightAnswer"] as? String
             }
         }
@@ -177,41 +200,66 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: функции нажатия кнопок выбора варианта ответа
     @objc func answerButtonFirstClick() {
-        answerButtonFirst.backgroundColor = .green
+        answerButtonFirst.backgroundColor = UIColor(named: "darkPurple")
+        answerButtonFirst.setTitleColor(UIColor(named: "profileBackground"), for: .normal)
+        
+        answerButtonSecond.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        answerButtonThird.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        answerButtonFourth.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        
         self.selectedButton = 1
-        answerButtonSecond.backgroundColor = .systemPink
-        answerButtonThird.backgroundColor = .systemPink
-        answerButtonFourth.backgroundColor = .systemPink
+        answerButtonSecond.backgroundColor = UIColor(named: "profileBackground")
+        answerButtonThird.backgroundColor = UIColor(named: "profileBackground")
+        answerButtonFourth.backgroundColor = UIColor(named: "profileBackground")
         currentAnswer = "answer1"
         userAnswers[numOfQuesString] = currentAnswer
     }
     
     @objc func answerButtonSecondClick() {
-        answerButtonSecond.backgroundColor = .green
+        answerButtonSecond.backgroundColor = UIColor(named: "darkPurple")
+        answerButtonSecond.setTitleColor(UIColor(named: "profileBackground"), for: .normal)
+        
+        answerButtonFirst.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        answerButtonThird.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        answerButtonFourth.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        
         self.selectedButton = 2
-        answerButtonFirst.backgroundColor = .systemPink
-        answerButtonThird.backgroundColor = .systemPink
-        answerButtonFourth.backgroundColor = .systemPink
+        answerButtonFirst.backgroundColor = UIColor(named: "profileBackground")
+        answerButtonThird.backgroundColor = UIColor(named: "profileBackground")
+        answerButtonFourth.backgroundColor = UIColor(named: "profileBackground")
         currentAnswer = "answer2"
         userAnswers[numOfQuesString] = currentAnswer
     }
     
     @objc func answerButtonThirdClick() {
-        answerButtonThird.backgroundColor = .green
+        answerButtonThird.backgroundColor = UIColor(named: "darkPurple")
+        answerButtonThird.setTitleColor(UIColor(named: "profileBackground"), for: .normal)
+        
+        answerButtonFirst.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        answerButtonSecond.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        answerButtonFourth.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        
         self.selectedButton = 3
-        answerButtonSecond.backgroundColor = .systemPink
-        answerButtonFirst.backgroundColor = .systemPink
-        answerButtonFourth.backgroundColor = .systemPink
+        answerButtonSecond.backgroundColor = UIColor(named: "profileBackground")
+        answerButtonFirst.backgroundColor = UIColor(named: "profileBackground")
+        answerButtonFourth.backgroundColor = UIColor(named: "profileBackground")
         currentAnswer = "answer3"
         userAnswers[numOfQuesString] = currentAnswer
     }
     
     @objc func answerButtonFourthClick() {
-        answerButtonFourth.backgroundColor = .green
+        answerButtonFourth.backgroundColor = UIColor(named: "darkPurple")
+        answerButtonFourth.setTitleColor(UIColor(named: "profileBackground"), for: .normal)
+        
+        answerButtonFirst.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        answerButtonThird.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        answerButtonSecond.setTitleColor(UIColor(named: "darkPurple"), for: .normal)
+        
+        
         self.selectedButton = 4
-        answerButtonSecond.backgroundColor = .systemPink
-        answerButtonThird.backgroundColor = .systemPink
-        answerButtonFirst.backgroundColor = .systemPink
+        answerButtonSecond.backgroundColor = UIColor(named: "profileBackground")
+        answerButtonThird.backgroundColor = UIColor(named: "profileBackground")
+        answerButtonFirst.backgroundColor = UIColor(named: "profileBackground")
         currentAnswer = "answer4"
         userAnswers[numOfQuesString] = currentAnswer
     }
@@ -226,13 +274,13 @@ class EnglishTestViewController: UIViewController, UITextFieldDelegate {
         // обновляем кнопки вариантов ответа
         switch selectedButton {
         case 1:
-            answerButtonFirst.backgroundColor = .systemPink
+            answerButtonFirst.backgroundColor = UIColor(named: "profileBackground")
         case 2:
-            answerButtonSecond.backgroundColor = .systemPink
+            answerButtonSecond.backgroundColor = UIColor(named: "profileBackground")
         case 3:
-            answerButtonThird.backgroundColor = .systemPink
+            answerButtonThird.backgroundColor = UIColor(named: "profileBackground")
         case 4:
-            answerButtonFourth.backgroundColor = .systemPink
+            answerButtonFourth.backgroundColor = UIColor(named: "profileBackground")
         case 0:
             break
         default:

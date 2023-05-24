@@ -20,8 +20,8 @@ class RegisterViewController: UIViewController {
     private let titleLabel: UILabel = {
        let title = UILabel()
         title.text = "Registration"
-        title.font = UIFont(name: "Simpleoak", size: 60)
-        title.textColor = .systemPurple
+        title.font = UIFont(name: "Optima", size: 45)
+        title.textColor = UIColor(named: "darkPurple")
         title.textAlignment = .center
         return title
     }()
@@ -51,13 +51,13 @@ class RegisterViewController: UIViewController {
         field.returnKeyType = .continue
         field.layer.cornerRadius = 12
         field.layer.borderWidth = 1
-        field.layer.borderColor = UIColor.systemPurple.cgColor
+        field.layer.borderColor = UIColor(named: "darkPurple")?.cgColor
         field.placeholder = "Email Adress..."
         
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .systemPurple
-        field.textColor = .white
+        field.backgroundColor = UIColor(named: "cellColor")
+        field.textColor = UIColor(named: "darkPurple")
         field.font = UIFont(name: "Optima", size: 20)
         
         return field
@@ -72,13 +72,13 @@ class RegisterViewController: UIViewController {
         field.returnKeyType = .continue
         field.layer.cornerRadius = 12
         field.layer.borderWidth = 1
-        field.layer.borderColor = UIColor.systemPurple.cgColor
+        field.layer.borderColor = UIColor(named: "darkPurple")?.cgColor
         field.placeholder = "First Name..."
         
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .systemPurple
-        field.textColor = .white
+        field.backgroundColor = UIColor(named: "cellColor")
+        field.textColor = UIColor(named: "darkPurple")
         field.font = UIFont(name: "Optima", size: 20)
         
         return field
@@ -93,13 +93,13 @@ class RegisterViewController: UIViewController {
         field.returnKeyType = .continue
         field.layer.cornerRadius = 12
         field.layer.borderWidth = 1
-        field.layer.borderColor = UIColor.systemPurple.cgColor
+        field.layer.borderColor = UIColor(named: "darkPurple")?.cgColor
         field.placeholder = "Last Name..."
         
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .systemPurple
-        field.textColor = .white
+        field.backgroundColor = UIColor(named: "cellColor")
+        field.textColor = UIColor(named: "darkPurple")
         field.font = UIFont(name: "Optima", size: 20)
         
         return field
@@ -114,13 +114,13 @@ class RegisterViewController: UIViewController {
         field.returnKeyType = .done
         field.layer.cornerRadius = 12
         field.layer.borderWidth = 1
-        field.layer.borderColor = UIColor.systemPurple.cgColor
+        field.layer.borderColor = UIColor(named: "darkPurple")?.cgColor
         field.placeholder = "Password..."
         
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .systemPurple
-        field.textColor = .white
+        field.backgroundColor = UIColor(named: "cellColor")
+        field.textColor = UIColor(named: "darkPurple")
         field.font = UIFont(name: "Optima", size: 20)
         field.isSecureTextEntry = true
         
@@ -131,7 +131,7 @@ class RegisterViewController: UIViewController {
     private let registerButton: UIButton = {
         let button = UIButton()
         button.setTitle("Register", for: .normal)
-        button.backgroundColor = .systemPurple
+        button.backgroundColor = UIColor(named: "darkPurple")
         
         button.titleLabel?.font = UIFont(name: "Optima", size: 24)
         button.layer.cornerRadius = 12
@@ -141,10 +141,10 @@ class RegisterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "darkgreen")
+        view.backgroundColor = UIColor(named: "cellColor")
         
         let navigationBar = self.navigationController?.navigationBar
-        navigationBar?.tintColor = .systemPurple
+        navigationBar?.tintColor = UIColor(named: "darkPurple")
         
         // добавление функции registerButtonTapped к кнопке регистрации
         registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
@@ -280,12 +280,12 @@ class RegisterViewController: UIViewController {
                                        lastName: lastName,
                                        emailAddress: email)
                 
-//                DatabaseManager.shared.insertNewUser(with: chatUser, completion: { success in
-//                    if success {
-//                        // upload image
-//
-//                    }
-//                })
+                DatabaseManager.shared.insertNewUser(with: chatUser, completion: { success in
+                    if success {
+                        // upload image
+
+                    }
+                })
                 
                 // Экран логина дисмисится, возвращаемся в initial view controller
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)

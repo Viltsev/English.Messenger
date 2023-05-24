@@ -13,7 +13,7 @@ class GrammarMistakeViewController: UIViewController {
         let title = UILabel()
         title.text = "Mistake here"
         title.font = UIFont(name: "Optima", size: 18)
-        title.textColor = .systemPurple
+        title.textColor = UIColor(named: "darkPurple")
         title.textAlignment = .center
         title.lineBreakMode = .byWordWrapping
         title.numberOfLines = 5
@@ -25,7 +25,7 @@ class GrammarMistakeViewController: UIViewController {
         let label = UILabel()
         label.text = "Replace here"
         label.font = UIFont(name: "Optima", size: 18)
-        label.textColor = .systemPink
+        label.textColor = UIColor(named: "darkPurple")
         label.textAlignment = .center
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 5
@@ -36,7 +36,7 @@ class GrammarMistakeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "cellColor")
         view.addSubview(grammarMistakeDescription)
         view.addSubview(grammarReplaceLabel)
     }
